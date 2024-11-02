@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz</title>
+
+  <style>
+    body {
+      font-family: sf pro text, -apple-system, BlinkMacSystemFont, Roboto,
+        segoe ui, Helvetica, Arial, sans-serif, apple color emoji,
+        segoe ui emoji, segoe ui symbol;
+      font-weight: 400;
+      line-height: 22.4px;
+      font-size: 16px;
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    ul,
+    ol {
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      max-width: none;
+    }
+
+    code {
+      background-color: #fff;
+      border: 1px solid #d1d7dc;
+      color: #b4690e;
+      font-size: 90%;
+      padding: 0.2rem 0.4rem;
+    }
+
+    .quiz-content {
+      padding: 2.4rem;
+      word-break: break-word;
+      max-width: 86rem;
+      margin: 0 auto;
+    }
+
+    .quiz-container {
+      margin: 0 auto;
+      max-width: 84rem;
+      padding: 0;
+    }
+
+    .question {
+      margin-bottom: 5rem;
+    }
+
+    .question span {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .question-prompt {
+      margin-top: 0.8rem;
+      font-weight: 700;
+    }
+
+    .question-answer {
+      margin-top: 1.6rem;
+      padding-left: 0;
+      box-sizing: border-box;
+    }
+
+    .question-answer label {
+      max-width: 80rem;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      min-width: 18rem;
+      border: solid #1c1d1f 2px;
+    }
+
+    .question-answer div {
+      padding: 0.5rem;
+      width: 100%;
+    }
+
+    .question-answer div:hover {
+      background-color: #f5f5f5;
+    }
+
+    /* .question-answer input {
+      display: none;
+    } */
+
+    .question-answer span {
+      width: 1rem;
+      height: 1rem;
+      margin-right: 1.6rem;
+      top: 0;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+      border: 0.2rem solid #1c1d1f;
+      position: relative;
+    }
+
+    .selected {
+      background: #1c1d1f;
+      box-shadow: 0 0 0 0.4rem #fff inset;
+    }
+
+    .score {
+      position: fixed;
+      background-color: #b4690e;
+      padding: 10px;
+      color: white;
+    }
+  </style>
+</head>
+
+<body onload="main()">
+  <div id="score" class="score">
+    <span>Score: N/A of N/A</span>
+  </div>
+  <div id="quiz-container" class="quiz-content"></div>
+
+  <script>
+    const quizData = {"pass_percent": 50, "questions": [{"_class": "assessment", "id": 74212972, "assessment_type": "multiple-choice", "prompt": {"question": "Docker containers isolate applications at which level of the computing stack?", "answers": ["OS Level", "Hypervisor Level", "Hardware Level", "Application Level"], "explanation": "Docker containers provide isolation at the OS level, allowing multiple containers to run on the same host while sharing the host&#x27;s kernel."}, "correct_response": ["a"], "section": "Docker Isolation", "question_plain": "Docker containers isolate applications at which level of the computing stack?", "related_lectures": []}, {"_class": "assessment", "id": 74212974, "assessment_type": "multiple-choice", "prompt": {"question": "In Docker&#x27;s layered architecture, how are changes to an image managed to optimize space and speed?", "answers": ["Changes are appended at the top layer", "Changes are overwritten in the base image", "Changes are managed through version control", "Changes are stored in a separate image"], "explanation": "In Docker&#x27;s layered architecture, changes to an image are managed by appending them at the top layer. Each layer is read-only, and new changes are added in subsequent layers. This approach optimizes space and speed because unchanged layers can be reused, and only the modified layers need to be stored or transmitted, enhancing efficiency in image management."}, "correct_response": ["a"], "section": "Docker Layered Architecture", "question_plain": "In Docker&#x27;s layered architecture, how are changes to an image managed to optimize space and speed?", "related_lectures": []}, {"_class": "assessment", "id": 74212976, "assessment_type": "multiple-choice", "prompt": {"question": "When migrating an application from a virtual machine to a Docker container, what common change must be accounted for regarding storage?", "answers": ["Adjustments in how persistent data is handled", "Changes in the filesystem structure", "Utilization of a different storage protocol", "Alterations in the backup and recovery process"], "explanation": "When migrating an application to a Docker container from a virtual machine, one common change to account for is adjustments in how persistent data is handled. Docker containers are ephemeral, and their filesystem is isolated. Therefore, changes in the filesystem structure and how persistent data is managed may be required to align with Docker&#x27;s containerized and stateless nature."}, "correct_response": ["b"], "section": "Docker Migration", "question_plain": "When migrating an application from a virtual machine to a Docker container, what common change must be accounted for regarding storage?", "related_lectures": []}, {"_class": "assessment", "id": 74212978, "assessment_type": "multiple-choice", "prompt": {"question": "Which component of Docker is responsible for managing the lifecycle of containers?", "answers": ["Docker Daemon", "Docker Registry", "Docker Engine", "Docker Compose"], "explanation": "The component of Docker responsible for managing the lifecycle of containers is the Docker Engine. The Docker Engine includes the Docker daemon, which is a background process responsible for building and running containers. It manages container orchestration, networking, and communication with the Docker CLI (Command Line Interface), ensuring the effective creation, execution, and termination of containers."}, "correct_response": ["c"], "section": "Docker Container Lifecycle Management", "question_plain": "Which component of Docker is responsible for managing the lifecycle of containers?", "related_lectures": []}, {"_class": "assessment", "id": 74212980, "assessment_type": "multiple-choice", "prompt": {"question": "How does Docker&#x27;s copy-on-write (CoW) strategy contribute to the efficiency of container deployment?", "answers": ["It reduces the need for frequent storage updates", "It minimizes disk space usage", "It speeds up the container creation process", "It enhances container security"], "explanation": "Docker&#x27;s copy-on-write (CoW) strategy contributes to efficiency by minimizing disk space usage. CoW allows multiple containers to share a base image while preserving individual filesystem changes. This results in reduced storage requirements and faster container creation times, making it an efficient approach for deploying and managing containers."}, "correct_response": ["b"], "section": "Docker Copy-on-Write Strategy", "question_plain": "How does Docker&#x27;s copy-on-write (CoW) strategy contribute to the efficiency of container deployment?", "related_lectures": []}, {"_class": "assessment", "id": 74212982, "assessment_type": "multiple-choice", "prompt": {"question": "What is the main advantage of Docker&#x27;s containerization when it comes to replicating the application&#x27;s environment across different development and production stages?", "answers": ["Consistency across environments", "Enhanced security", "Improved scalability", "Greater resource utilization"], "explanation": "Docker&#x27;s containerization ensures consistency across different environments. Containers encapsulate the application and its dependencies, providing a consistent runtime environment from development to production. This consistency simplifies the deployment process, reduces the likelihood of environment-related issues, and streamlines the replication of the application&#x27;s environment across various stages."}, "correct_response": ["a"], "section": "Docker Containerization for Replication", "question_plain": "What is the main advantage of Docker&#x27;s containerization when it comes to replicating the application&#x27;s environment across different development and production stages?", "related_lectures": []}, {"_class": "assessment", "id": 74212984, "assessment_type": "multiple-choice", "prompt": {"question": "In a microservices architecture, how does Docker&#x27;s networking capabilities simplify service discovery and inter-service communication?", "answers": ["Docker provides built-in DNS resolution for service discovery", "Docker allows direct IP addressing for inter-service communication", "Docker offers a centralized service registry for easy discovery", "Docker uses multicast communication for efficient service discovery"], "explanation": "Docker&#x27;s networking capabilities simplify service discovery and inter-service communication in a microservices architecture by providing built-in DNS resolution. Containers can refer to each other by name, and Docker automatically resolves the service names to the corresponding container IP addresses. This simplifies the configuration and enhances flexibility in connecting microservices within the architecture."}, "correct_response": ["a"], "section": "Docker Networking in Microservices Architecture", "question_plain": "In a microservices architecture, how does Docker&#x27;s networking capabilities simplify service discovery and inter-service communication?", "related_lectures": []}, {"_class": "assessment", "id": 74212970, "assessment_type": "multiple-choice", "prompt": {"question": "What is the primary benefit of using Docker containers over traditional virtual machines for running applications?", "answers": ["Portability", "Hypervisor Overhead", "Performance Isolation", "Hardware Independence"], "explanation": "Docker containers offer portability, allowing applications to run consistently across different environments, which is not as straightforward with traditional virtual machines."}, "correct_response": ["a"], "section": "Docker Basics", "question_plain": "What is the primary benefit of using Docker containers over traditional virtual machines for running applications?", "related_lectures": []}, {"_class": "assessment", "id": 74212986, "assessment_type": "multiple-choice", "prompt": {"question": "The command to build a Docker image from a Dockerfile is docker _______.", "answers": ["build", "create", "construct", "make"], "explanation": "The correct command to build a Docker image from a Dockerfile is docker build. This command reads the instructions from the Dockerfile and creates an image based on those instructions. Using docker build is a fundamental step in the Docker image creation process."}, "correct_response": ["a"], "section": "Docker Image Building", "question_plain": "The command to build a Docker image from a Dockerfile is docker _______.", "related_lectures": []}, {"_class": "assessment", "id": 74212988, "assessment_type": "multiple-choice", "prompt": {"question": "A persistent data storage in Docker that is not tied to the container lifecycle is called a Docker _______.", "answers": ["volume", "storage", "share", "persist"], "explanation": "A persistent data storage in Docker that is not tied to the container lifecycle is called a Docker volume. Docker volumes allow data to persist beyond the lifecycle of a container, making them suitable for scenarios where data needs to be shared or preserved even if the container is stopped or removed."}, "correct_response": ["a"], "section": "Docker Volumes", "question_plain": "A persistent data storage in Docker that is not tied to the container lifecycle is called a Docker _______.", "related_lectures": []}, {"_class": "assessment", "id": 74212990, "assessment_type": "multiple-choice", "prompt": {"question": "To expose a container&#x27;s port to the host, the -p flag is used in the Docker _______ command.", "answers": ["run", "expose", "publish", "open"], "explanation": "To expose a container&#x27;s port to the host, the -p flag is used in the Docker run command. The -p flag followed by the host port and container port mappings allows communication between the host and the container over specified ports. This is essential for making services inside the container accessible from the host machine or external networks."}, "correct_response": ["a"], "section": "Exposing Container Ports", "question_plain": "To expose a container&#x27;s port to the host, the -p flag is used in the Docker _______ command.", "related_lectures": []}, {"_class": "assessment", "id": 74212992, "assessment_type": "multiple-choice", "prompt": {"question": "The process by which Docker containers can be moved from one Docker host to another without downtime is known as container _______.", "answers": ["Migration", "Transfer", "Synchronization", "Orchestration"], "explanation": "The process by which Docker containers can be moved from one Docker host to another without downtime is known as container migration. This involves transferring the state and configuration of a running container to another host seamlessly, ensuring continuous availability and reliability of the application. Container orchestration tools often handle this process."}, "correct_response": ["a"], "section": "Container Migration", "question_plain": "The process by which Docker containers can be moved from one Docker host to another without downtime is known as container _______.", "related_lectures": []}, {"_class": "assessment", "id": 74212994, "assessment_type": "multiple-choice", "prompt": {"question": "Docker&#x27;s _______ network driver allows containers to be joined to a user-defined network, facilitating easier inter-container communication.", "answers": ["Bridge", "Host", "Overlay", "Custom"], "explanation": "Docker&#x27;s overlay network driver allows containers to be joined to a user-defined network, facilitating easier inter-container communication. This driver creates an overlay network that spans multiple Docker hosts, enabling seamless communication between containers across different hosts, a crucial feature for distributed applications and microservices architectures."}, "correct_response": ["c"], "section": "Docker Overlay Network", "question_plain": "Docker&#x27;s _______ network driver allows containers to be joined to a user-defined network, facilitating easier inter-container communication.", "related_lectures": []}, {"_class": "assessment", "id": 74212996, "assessment_type": "multiple-choice", "prompt": {"question": "The Docker _______ feature allows you to manage sensitive information such as passwords and API keys securely within containers.", "answers": ["Key Vault", "Secrets", "Secure Storage", "Encryption"], "explanation": "The Docker secrets feature allows you to manage sensitive information such as passwords and API keys securely within containers. Secrets are encrypted and only accessible to the services that need them, enhancing security by preventing unauthorized access to sensitive data. This feature is valuable for handling confidential information in containerized applications."}, "correct_response": ["b"], "section": "Docker Secrets", "question_plain": "The Docker _______ feature allows you to manage sensitive information such as passwords and API keys securely within containers.", "related_lectures": []}, {"_class": "assessment", "id": 74212998, "assessment_type": "multiple-choice", "prompt": {"question": "You have an application that needs to scale rapidly due to varying loads. How would Docker handle this scenario in terms of container instantiation?", "answers": ["Automatically adjust the number of container instances based on demand", "Manually increase the container instances when needed", "Use load balancing to distribute traffic evenly", "Automatically decrease the number of container instances during low demand"], "explanation": "Docker can automatically handle the scaling of container instances based on demand. This is achieved through features like Docker Swarm or Kubernetes, which can dynamically adjust the number of container replicas to manage varying loads efficiently, ensuring optimal resource utilization and responsiveness to changes in demand."}, "correct_response": ["a"], "section": "Docker Scaling and Orchestration", "question_plain": "You have an application that needs to scale rapidly due to varying loads. How would Docker handle this scenario in terms of container instantiation?", "related_lectures": []}, {"_class": "assessment", "id": 74213000, "assessment_type": "multiple-choice", "prompt": {"question": "Your organization is shifting from virtual machines to Docker containers. What Docker features would you highlight to address concerns regarding network security and segmentation?", "answers": ["Docker Network Policies", "Docker Compose Files", "Docker Hub Security Scanning", "Docker Secrets"], "explanation": "Docker Network Policies allow you to control the communication between containers, enhancing network security and segmentation. By defining rules and policies, you can restrict or allow traffic between containers, ensuring a secure network environment. Highlighting features like Docker Secrets also adds an extra layer of security by managing sensitive information within the Docker ecosystem."}, "correct_response": ["a"], "section": "Docker Network Security and Segmentation", "question_plain": "Your organization is shifting from virtual machines to Docker containers. What Docker features would you highlight to address concerns regarding network security and segmentation?", "related_lectures": []}, {"_class": "assessment", "id": 74213002, "assessment_type": "multiple-choice", "prompt": {"question": "A development team is struggling with environment parity issues between development, staging, and production. How can Docker be utilized to solve these issues?", "answers": ["Use Docker Compose to define and maintain consistent environments across stages", "Manually replicate environments for each stage", "Use Docker Volumes to share environment configurations", "Utilize Docker Inspect to ensure parity between environments"], "explanation": "Docker Compose allows the definition of multi-container applications, ensuring consistent environments across different stages of development. By defining services, networks, and volumes in a Compose file, developers can easily replicate the environment in development, staging, and production, reducing issues related to environment parity."}, "correct_response": ["a"], "section": "Docker Environment Parity and Development", "question_plain": "A development team is struggling with environment parity issues between development, staging, and production. How can Docker be utilized to solve these issues?", "related_lectures": []}, {"_class": "assessment", "id": 74213004, "assessment_type": "multiple-choice", "prompt": {"question": "Which of the following is a core component of Docker&#x27;s architecture that is responsible for building Docker images from a Dockerfile?", "answers": ["Docker Registry", "Docker Daemon", "Docker Engine", "Docker Compose"], "explanation": "The core component responsible for building Docker images from a Dockerfile is Docker Engine. Docker Engine is the runtime that executes containers and includes Docker CLI and Docker Daemon. Docker Daemon is responsible for building and managing images, while Docker CLI is the command-line interface used for interacting with Docker. Docker Compose is a tool for defining and running multi-container Docker applications, but it is not the core component for building images."}, "correct_response": ["c"], "section": "Docker Architecture", "question_plain": "Which of the following is a core component of Docker&#x27;s architecture that is responsible for building Docker images from a Dockerfile?", "related_lectures": []}, {"_class": "assessment", "id": 74213006, "assessment_type": "multiple-choice", "prompt": {"question": "What is the primary command-line interface (CLI) tool used to interact with Docker and manage its operations?", "answers": ["Docker Client", "Docker Shell", "Docker Manager", "Docker Navigator"], "explanation": "The primary command-line interface (CLI) tool used to interact with Docker and manage its operations is Docker Client. Docker Client provides a command-line interface for users to interact with Docker. It allows users to build, manage, and deploy containers using various commands. Docker Shell, Docker Manager, and Docker Navigator are not standard terms for Docker CLI tools."}, "correct_response": ["a"], "section": "Docker Command-Line Interface", "question_plain": "What is the primary command-line interface (CLI) tool used to interact with Docker and manage its operations?", "related_lectures": []}, {"_class": "assessment", "id": 74213008, "assessment_type": "multiple-choice", "prompt": {"question": "During the Docker installation process on a Linux system, which user group should a user be added to in order to run Docker commands without requiring root access?", "answers": ["docker", "users", "dockerusers", "dockergrp"], "explanation": "During the Docker installation process on a Linux system, a user should be added to the &#x27;docker&#x27; group in order to run Docker commands without requiring root access. Adding a user to the &#x27;docker&#x27; group grants the user the necessary permissions to interact with the Docker daemon. The other options (&#x27;users&#x27;, &#x27;dockerusers&#x27;, &#x27;dockergrp&#x27;) are not standard groups used for Docker permissions."}, "correct_response": ["a"], "section": "Docker Installation", "question_plain": "During the Docker installation process on a Linux system, which user group should a user be added to in order to run Docker commands without requiring root access?", "related_lectures": []}, {"_class": "assessment", "id": 74213010, "assessment_type": "multiple-choice", "prompt": {"question": "In Docker&#x27;s client-server architecture, which component acts as the server, listening for API requests and executing container management commands?", "answers": ["Docker Engine", "Docker Client", "Docker Hub", "Docker Daemon"], "explanation": "In Docker&#x27;s client-server architecture, the Docker Daemon acts as the server. It listens for API requests and executes container management commands. The Docker Daemon manages Docker objects, such as images, containers, networks, and volumes, and communicates with the Docker client to execute user commands."}, "correct_response": ["d"], "section": "Docker Client-Server Architecture", "question_plain": "In Docker&#x27;s client-server architecture, which component acts as the server, listening for API requests and executing container management commands?", "related_lectures": []}, {"_class": "assessment", "id": 74213012, "assessment_type": "multiple-choice", "prompt": {"question": "What is the recommended method for installing Docker on a new host to ensure you get the latest version and features?", "answers": ["Package Manager (e.g., apt, yum)", "Docker Official Install Script", "Downloading and Compiling from Source", "Docker Snap Package"], "explanation": "The recommended method for installing Docker on a new host for the latest version and features is to use the Docker Official Install Script. This script ensures that you get the latest stable version and simplifies the installation process by automatically configuring the necessary dependencies and settings."}, "correct_response": ["b"], "section": "Docker Installation", "question_plain": "What is the recommended method for installing Docker on a new host to ensure you get the latest version and features?", "related_lectures": []}, {"_class": "assessment", "id": 74213014, "assessment_type": "multiple-choice", "prompt": {"question": "Docker can be configured to start on boot on a Linux system using which system management daemon?", "answers": ["init.d", "systemd", "Upstart", "sysvinit"], "explanation": "Docker can be configured to start on boot on a Linux system using the systemd system management daemon. Systemd is a common init system in modern Linux distributions and provides facilities for starting, stopping, and managing services, including Docker. Configuring Docker to start on boot ensures that the Docker services are available after the system boots up."}, "correct_response": ["b"], "section": "Docker System Configuration", "question_plain": "Docker can be configured to start on boot on a Linux system using which system management daemon?", "related_lectures": []}, {"_class": "assessment", "id": 74213016, "assessment_type": "multiple-choice", "prompt": {"question": "How does Docker&#x27;s layered filesystem, specifically the Union File System (UFS), optimize the storage of Docker images?", "answers": ["Reducing image size", "Enhancing image performance", "Enabling faster image retrieval", "Improving image security"], "explanation": "Docker&#x27;s layered filesystem, especially the Union File System (UFS), optimizes image storage by reducing image size. The UFS allows images to share layers, and common layers are stored only once, reducing redundancy and saving storage space. This optimization is crucial for efficient image distribution, faster container instantiation, and minimizing storage requirements on the host system."}, "correct_response": ["a"], "section": "Docker Layered Filesystem and UFS Optimization", "question_plain": "How does Docker&#x27;s layered filesystem, specifically the Union File System (UFS), optimize the storage of Docker images?", "related_lectures": []}, {"_class": "assessment", "id": 74213018, "assessment_type": "multiple-choice", "prompt": {"question": "Docker&#x27;s architecture is designed to be extensible. Which component can be replaced or augmented to customize or enhance Docker&#x27;s capabilities?", "answers": ["Docker Engine", "Docker Compose", "Docker Registry", "Docker Pluggable Infrastructure"], "explanation": "Docker&#x27;s architecture is designed to be extensible, and the component that can be replaced or augmented to customize or enhance Docker&#x27;s capabilities is the Docker Pluggable Infrastructure. This allows users to extend Docker&#x27;s functionality by adding plugins to the Docker daemon, enabling customization and integration with third-party tools or services to meet specific requirements."}, "correct_response": ["d"], "section": "Docker Architecture Extensibility and Plugins", "question_plain": "Docker&#x27;s architecture is designed to be extensible. Which component can be replaced or augmented to customize or enhance Docker&#x27;s capabilities?", "related_lectures": []}, {"_class": "assessment", "id": 74213020, "assessment_type": "multiple-choice", "prompt": {"question": "What is the role of the Docker daemon&#x27;s REST API in Docker&#x27;s architecture, and how does it affect remote management of containers?", "answers": ["Exposing Docker functionalities through HTTP endpoints", "Enabling communication between Docker components", "Managing container orchestration", "Authenticating Docker users"], "explanation": "The Docker daemon&#x27;s REST API plays a crucial role in Docker&#x27;s architecture by exposing Docker functionalities through HTTP endpoints. It enables communication between Docker components, allowing users to interact with Docker remotely. This REST API is essential for tasks such as managing containers, orchestrating services, and accessing Docker features programmatically. Remote management of containers is facilitated by leveraging the REST API for seamless communication and control."}, "correct_response": ["b"], "section": "Docker Daemon REST API and Remote Management", "question_plain": "What is the role of the Docker daemon&#x27;s REST API in Docker&#x27;s architecture, and how does it affect remote management of containers?", "related_lectures": []}, {"_class": "assessment", "id": 74213022, "assessment_type": "multiple-choice", "prompt": {"question": "Docker&#x27;s REST API listens on a Unix socket located at _______ by default.", "answers": ["/var/run/docker.sock", "/tmp/docker.sock", "/opt/docker.sock", "/usr/docker.sock"], "explanation": "Docker&#x27;s REST API listens on a Unix socket located at /var/run/docker.sock by default. This socket provides a communication endpoint for interacting with the Docker daemon, allowing users and applications to manage Docker containers and services through RESTful API calls."}, "correct_response": ["a"], "section": "Docker REST API Configuration", "question_plain": "Docker&#x27;s REST API listens on a Unix socket located at _______ by default.", "related_lectures": []}, {"_class": "assessment", "id": 74213024, "assessment_type": "multiple-choice", "prompt": {"question": "The _______ command in Docker is used to verify that your installation of Docker is working correctly.", "answers": ["docker version", "docker info", "docker verify", "docker check"], "explanation": "The docker info command in Docker is used to verify that your installation of Docker is working correctly. It provides detailed information about the Docker installation, including the version, operating system details, and configuration. Running this command is a quick way to check if Docker is properly installed and accessible."}, "correct_response": ["b"], "section": "Docker Installation Check", "question_plain": "The _______ command in Docker is used to verify that your installation of Docker is working correctly.", "related_lectures": []}, {"_class": "assessment", "id": 74213026, "assessment_type": "multiple-choice", "prompt": {"question": "To change Docker&#x27;s default storage location, you must modify the _______ configuration file.", "answers": ["docker-storage.conf", "docker-config.yml", "docker-daemon.json", "docker-settings.conf"], "explanation": "To change Docker&#x27;s default storage location, you must modify the docker-daemon.json configuration file. This file allows you to configure various settings for the Docker daemon, including storage driver options and storage path. Modifying this configuration file is necessary when you want to specify a custom location for storing Docker data on your system."}, "correct_response": ["c"], "section": "Docker Storage Configuration", "question_plain": "To change Docker&#x27;s default storage location, you must modify the _______ configuration file.", "related_lectures": []}, {"_class": "assessment", "id": 74213028, "assessment_type": "multiple-choice", "prompt": {"question": "The dockerd command-line option _______ is used to configure the Docker daemon with an HTTPS endpoint for secure connections.", "answers": ["--tlsverify", "--tlscert", "--tlscacert", "--tlskey"], "explanation": "The correct option is --tlscert. This option is used to specify the path to the TLS certificate file for securing communication with the Docker daemon over HTTPS. Configuring the Docker daemon with HTTPS is essential for securing connections in production environments, preventing unauthorized access, and ensuring the confidentiality and integrity of data exchanged between the Docker client and daemon."}, "correct_response": ["b"], "section": "Docker Daemon Configuration", "question_plain": "The dockerd command-line option _______ is used to configure the Docker daemon with an HTTPS endpoint for secure connections.", "related_lectures": []}, {"_class": "assessment", "id": 74213030, "assessment_type": "multiple-choice", "prompt": {"question": "When setting up Docker in a multi-user environment, the modification of the _______ file is necessary to control resources and permissions.", "answers": ["daemon.json", "docker-compose.yml", "dockerfile", "docker-config.json"], "explanation": "The correct option is daemon.json. This file is used to configure various settings for the Docker daemon, including resource limits, security options, and other parameters. In a multi-user environment, modifying the daemon.json file becomes necessary to control resources and permissions, ensuring that Docker operates according to the desired configuration for users and applications."}, "correct_response": ["a"], "section": "Multi-User Docker Configuration", "question_plain": "When setting up Docker in a multi-user environment, the modification of the _______ file is necessary to control resources and permissions.", "related_lectures": []}, {"_class": "assessment", "id": 74213032, "assessment_type": "multiple-choice", "prompt": {"question": "To integrate Docker with a cloud provider&#x27;s block storage service, a Docker _______ would be utilized.", "answers": ["Volume", "Network", "Swarm", "Plugin"], "explanation": "The correct option is Volume. Docker volumes are used to persist data and integrate with external storage services. When integrating Docker with a cloud provider&#x27;s block storage service, using Docker volumes allows applications to store and retrieve data from external storage, providing a scalable and efficient solution for managing data across containers in a cloud environment."}, "correct_response": ["a"], "section": "Docker Storage", "question_plain": "To integrate Docker with a cloud provider&#x27;s block storage service, a Docker _______ would be utilized.", "related_lectures": []}, {"_class": "assessment", "id": 74213034, "assessment_type": "multiple-choice", "prompt": {"question": "You are tasked with setting up a Docker environment that must adhere to specific network configurations and security policies. Which Docker architectural component would you interact with to customize the network settings?", "answers": ["Docker Network", "Docker Compose", "Docker Swarm", "Docker Engine"], "explanation": "To customize network settings in Docker, you would interact with the Docker Network component. This allows you to create and manage networks, define their configurations, and connect containers to specific networks. Customizing network settings is crucial for meeting specific security policies and network configurations in a Docker environment."}, "correct_response": ["a"], "section": "Docker Networking", "question_plain": "You are tasked with setting up a Docker environment that must adhere to specific network configurations and security policies. Which Docker architectural component would you interact with to customize the network settings?", "related_lectures": []}, {"_class": "assessment", "id": 74213036, "assessment_type": "multiple-choice", "prompt": {"question": "When configuring Docker for a team of developers, you need to ensure that they can access a private Docker registry securely. Which Docker configuration files or options would you need to set up?", "answers": ["Dockerfile", "docker-compose.yml", ".dockerignore", "Docker Daemon Configuration File"], "explanation": "To ensure secure access to a private Docker registry for a team of developers, you would need to set up Docker Daemon Configuration File. This file allows you to configure the Docker daemon, including settings related to authentication, network, and security. By customizing this file, you can enforce secure access to private registries, ensuring that the team can securely pull and push images while adhering to the organization&#x27;s security policies."}, "correct_response": ["d"], "section": "Docker Security", "question_plain": "When configuring Docker for a team of developers, you need to ensure that they can access a private Docker registry securely. Which Docker configuration files or options would you need to set up?", "related_lectures": []}, {"_class": "assessment", "id": 74213038, "assessment_type": "multiple-choice", "prompt": {"question": "Your organization requires Docker containers to run with specific kernel parameters to comply with security standards. How would you configure the Docker daemon to ensure these parameters are set when containers are run?", "answers": ["Docker Compose", "Docker Daemon Configuration File", "Dockerfile", "Docker Security Options"], "explanation": "To ensure Docker containers run with specific kernel parameters, you would configure the Docker daemon using the Docker Daemon Configuration File. This file allows you to specify various settings for the Docker daemon, including security-related configurations. By setting the required kernel parameters in this file, you ensure that all containers launched by the Docker daemon adhere to the organization&#x27;s security standards and comply with the specified kernel parameters."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "Your organization requires Docker containers to run with specific kernel parameters to comply with security standards. How would you configure the Docker daemon to ensure these parameters are set when containers are run?", "related_lectures": []}, {"_class": "assessment", "id": 74213040, "assessment_type": "multiple-choice", "prompt": {"question": "Which Docker command is used to download an image from Docker Hub?", "answers": ["docker get", "docker pull", "docker fetch", "docker download"], "explanation": "The correct command to download an image from Docker Hub is docker pull. This command retrieves the specified image from the Docker Hub registry and stores it on your local machine, making it available for use. It is a fundamental step in the containerization process for obtaining pre-built images."}, "correct_response": ["b"], "section": "Docker Image Management", "question_plain": "Which Docker command is used to download an image from Docker Hub?", "related_lectures": []}, {"_class": "assessment", "id": 74213042, "assessment_type": "multiple-choice", "prompt": {"question": "To list all running Docker containers, which command should you use?", "answers": ["docker ps", "docker list", "docker show", "docker status"], "explanation": "The command docker ps is used to list all running Docker containers. This command provides a snapshot of the currently active containers, showing essential information such as container ID, image used, status, ports, and names. It is a handy command for monitoring the running state of containers on your system."}, "correct_response": ["a"], "section": "Docker Container Management", "question_plain": "To list all running Docker containers, which command should you use?", "related_lectures": []}, {"_class": "assessment", "id": 74213044, "assessment_type": "multiple-choice", "prompt": {"question": "What is the correct command to stop a running Docker container?", "answers": ["docker stop", "docker halt", "docker end", "docker terminate"], "explanation": "The correct command to stop a running Docker container is docker stop. This command sends a SIGTERM signal to the specified container, allowing it to gracefully shut down. If the container does not stop within a specified timeout, a SIGKILL signal is sent to forcefully terminate it. This ensures a controlled and safe container shutdown."}, "correct_response": ["a"], "section": "Docker Container Management", "question_plain": "What is the correct command to stop a running Docker container?", "related_lectures": []}, {"_class": "assessment", "id": 74213046, "assessment_type": "multiple-choice", "prompt": {"question": "How can you create a new Docker image from a modified container?", "answers": ["docker build", "docker commit", "docker save", "docker export"], "explanation": "To create a new Docker image from a modified container, you can use the docker commit command. This command takes a snapshot of the container&#x27;s file system and creates a new image. While docker build is used to build an image from a Dockerfile, docker save and docker export are used for exporting images or containers but not for creating a new image from a modified container."}, "correct_response": ["b"], "section": "Docker Image Creation", "question_plain": "How can you create a new Docker image from a modified container?", "related_lectures": []}, {"_class": "assessment", "id": 74213048, "assessment_type": "multiple-choice", "prompt": {"question": "Which command is used to remove a Docker image from the local storage?", "answers": ["docker rmi", "docker rm", "docker delete", "docker remove"], "explanation": "The command used to remove a Docker image from the local storage is docker rmi (remove image). docker rm is used to remove a container, not an image. Commands like docker delete and docker remove are not valid commands for removing Docker images."}, "correct_response": ["a"], "section": "Docker Image Management", "question_plain": "Which command is used to remove a Docker image from the local storage?", "related_lectures": []}, {"_class": "assessment", "id": 74213050, "assessment_type": "multiple-choice", "prompt": {"question": "If you need to see the logs of a Docker container, which command will display them?", "answers": ["docker log", "docker logs", "docker show", "docker info"], "explanation": "To view the logs of a Docker container, you should use the docker logs command. This command provides information about the container&#x27;s recent execution, including standard output and standard error. Commands like docker log, docker show, and docker info are not valid commands for displaying container logs."}, "correct_response": ["b"], "section": "Docker Container Logging", "question_plain": "If you need to see the logs of a Docker container, which command will display them?", "related_lectures": []}, {"_class": "assessment", "id": 74213052, "assessment_type": "multiple-choice", "prompt": {"question": "What Docker command allows you to execute a command inside a running container?", "answers": ["docker attach", "docker exec", "docker run", "docker start"], "explanation": "The docker exec command is used to execute a command inside a running Docker container. This command provides a way to run commands in an already running container, facilitating debugging, troubleshooting, and various administrative tasks without the need to start a new container instance."}, "correct_response": ["b"], "section": "Docker Container Management", "question_plain": "What Docker command allows you to execute a command inside a running container?", "related_lectures": []}, {"_class": "assessment", "id": 74213054, "assessment_type": "multiple-choice", "prompt": {"question": "How can you specify a restart policy for a Docker container at runtime?", "answers": ["Using the --restart option with docker run", "Editing the Dockerfile", "Modifying the container&#x27;s configuration file", "Using the docker restart-policy command"], "explanation": "The --restart option with the docker run command allows you to specify a restart policy for a Docker container at runtime. This option accepts different values like always, unless-stopped, or a specific count, defining when the container should be automatically restarted. It&#x27;s a crucial feature for ensuring high availability and reliability in containerized applications."}, "correct_response": ["a"], "section": "Docker Container Lifecycle", "question_plain": "How can you specify a restart policy for a Docker container at runtime?", "related_lectures": []}, {"_class": "assessment", "id": 74213056, "assessment_type": "multiple-choice", "prompt": {"question": "In Docker, what is the best practice for tagging an image to push it to a remote registry?", "answers": ["Use a versioned tag (e.g., v1.0)", "Use the latest tag (latest)", "Use a custom tag with meaningful information", "Do not use tags when pushing to a remote registry"], "explanation": "The best practice for tagging an image to push it to a remote registry is to use a versioned tag (e.g., v1.0). Versioned tags provide clear and unambiguous identification of different releases, making it easier to manage and roll back to specific versions. Using meaningful versioning enhances traceability and reproducibility of the deployed images."}, "correct_response": ["a"], "section": "Docker Image Tagging", "question_plain": "In Docker, what is the best practice for tagging an image to push it to a remote registry?", "related_lectures": []}, {"_class": "assessment", "id": 74213058, "assessment_type": "multiple-choice", "prompt": {"question": "The Docker command to follow the log output of a container is docker logs -f _______, where _______ is to be replaced with the container&#x27;s name or ID.", "answers": ["container_id", "-f container_id", "-f container_name", "-f container_logs"], "explanation": "The correct command is docker logs -f container_name, where container_name is the name of the container or its ID. Using -f allows real-time following of the log output. Specifying the container&#x27;s name or ID is essential for targeting the desired container&#x27;s logs."}, "correct_response": ["c"], "section": "Docker Logging", "question_plain": "The Docker command to follow the log output of a container is docker logs -f _______, where _______ is to be replaced with the container&#x27;s name or ID.", "related_lectures": []}, {"_class": "assessment", "id": 74213060, "assessment_type": "multiple-choice", "prompt": {"question": "To build an image using a Dockerfile, the command docker build -t myimage:latest _______ is used, where _______ is the directory containing the Dockerfile.", "answers": ["-f Dockerfile_directory", "-t Dockerfile_directory", "-f .", "-t ."], "explanation": "The correct command is docker build -t myimage:latest -t ., where . represents the current directory containing the Dockerfile. This option is used to specify the build context, ensuring Docker includes the necessary files during the build process. Including the directory path after -t is crucial for correctly referencing the Dockerfile and its location."}, "correct_response": ["d"], "section": "Docker Image Building", "question_plain": "To build an image using a Dockerfile, the command docker build -t myimage:latest _______ is used, where _______ is the directory containing the Dockerfile.", "related_lectures": []}, {"_class": "assessment", "id": 74213062, "assessment_type": "multiple-choice", "prompt": {"question": "When you want to remove all stopped containers, unused networks, dangling images, and build cache, you can use the docker system _______ command.", "answers": ["prune", "clean", "clear", "optimize"], "explanation": "The correct command is docker system prune, where prune is used to remove stopped containers, unused networks, dangling images, and build cache. This command helps in cleaning up the Docker environment by removing unnecessary resources, optimizing disk space, and enhancing system performance. It&#x27;s a useful maintenance command to keep the Docker environment tidy and free from unused artifacts."}, "correct_response": ["a"], "section": "Docker System Maintenance", "question_plain": "When you want to remove all stopped containers, unused networks, dangling images, and build cache, you can use the docker system _______ command.", "related_lectures": []}, {"_class": "assessment", "id": 74213064, "assessment_type": "multiple-choice", "prompt": {"question": "The command to inspect the detailed information of a Docker object (container, image, volume, or network) is docker _______.", "answers": ["info", "inspect", "details", "analyze"], "explanation": "The correct command to inspect detailed information about a Docker object is docker inspect. This command provides a JSON representation of the object&#x27;s configuration, status, and other details, allowing users to troubleshoot and understand the characteristics of the specified Docker entity."}, "correct_response": ["b"], "section": "Docker Inspection", "question_plain": "The command to inspect the detailed information of a Docker object (container, image, volume, or network) is docker _______.", "related_lectures": []}, {"_class": "assessment", "id": 74213066, "assessment_type": "multiple-choice", "prompt": {"question": "When you want to update the configuration of one or more Docker services, you use the command docker service update _______.", "answers": ["modify", "change", "update", "alter"], "explanation": "To update the configuration of one or more Docker services, the correct command is docker service update. This command allows you to adjust various parameters of a service, such as replicas, image, and constraints, enabling dynamic changes to the service without the need for a complete redeployment."}, "correct_response": ["c"], "section": "Docker Service Configuration", "question_plain": "When you want to update the configuration of one or more Docker services, you use the command docker service update _______.", "related_lectures": []}, {"_class": "assessment", "id": 74213068, "assessment_type": "multiple-choice", "prompt": {"question": "To remove a Docker container along with its volumes, you can use the docker rm -v _______ command.", "answers": ["delete", "purge", "remove", "clean"], "explanation": "The command to remove a Docker container along with its volumes is docker rm -v. This ensures that not only the container but also its associated volumes are deleted. The -v flag signifies the removal of volumes, providing a comprehensive cleanup when the container is no longer needed."}, "correct_response": ["c"], "section": "Docker Container Removal", "question_plain": "To remove a Docker container along with its volumes, you can use the docker rm -v _______ command.", "related_lectures": []}, {"_class": "assessment", "id": 74213070, "assessment_type": "multiple-choice", "prompt": {"question": "What is Docker Hub primarily used for in the context of containerization?", "answers": ["Storing and sharing container images", "Managing Docker containers", "Configuring Docker networks", "Defining Docker build instructions"], "explanation": "Docker Hub serves as a cloud-based registry for storing and sharing container images. It facilitates collaboration, allowing users to access and deploy pre-built images, streamlining the containerization process."}, "correct_response": ["a"], "section": "Docker Hub", "question_plain": "What is Docker Hub primarily used for in the context of containerization?", "related_lectures": []}, {"_class": "assessment", "id": 74213072, "assessment_type": "multiple-choice", "prompt": {"question": "When defining a container&#x27;s build process, which file is used as a set of instructions for Docker?", "answers": ["Dockerfile", "README.md", ".dockerignore", "docker-compose.yml"], "explanation": "The Dockerfile is a text file that contains instructions for building a Docker image. It specifies the base image, application code, dependencies, and other settings required for creating a container. This file is essential in automating the container build process."}, "correct_response": ["a"], "section": "Dockerfile", "question_plain": "When defining a container&#x27;s build process, which file is used as a set of instructions for Docker?", "related_lectures": []}, {"_class": "assessment", "id": 74213074, "assessment_type": "multiple-choice", "prompt": {"question": "What is the significance of the FROM instruction in a Dockerfile?", "answers": ["Specifies the base image for the Docker image", "Defines environment variables for the container", "Declares the entry point for the container", "Configures networking settings for the container"], "explanation": "The FROM instruction in a Dockerfile specifies the base image upon which the new image will be built. It defines the starting point for the container, providing the foundation for additional configuration and customization. This instruction is crucial for establishing the environment and dependencies needed for the application within the container."}, "correct_response": ["a"], "section": "Dockerfile FROM Instruction", "question_plain": "What is the significance of the FROM instruction in a Dockerfile?", "related_lectures": []}, {"_class": "assessment", "id": 74213076, "assessment_type": "multiple-choice", "prompt": {"question": "How can you ensure that a Docker image is automatically rebuilt whenever its base image is updated in a registry?", "answers": ["Use a webhook to trigger a rebuild whenever the base image is updated.", "Set up a cron job to periodically check for updates and rebuild the image.", "Manually monitor the registry and rebuild the image when an update is detected.", "Enable automatic rebuilding in the Dockerfile using the AUTOREBUILD instruction."], "explanation": "To automatically rebuild a Docker image when its base image is updated, you can use a webhook that triggers a rebuild upon updates in the registry. This ensures that your image stays up-to-date with the latest changes in the base image without manual intervention."}, "correct_response": ["a"], "section": "Image Rebuilding", "question_plain": "How can you ensure that a Docker image is automatically rebuilt whenever its base image is updated in a registry?", "related_lectures": []}, {"_class": "assessment", "id": 74213078, "assessment_type": "multiple-choice", "prompt": {"question": "What is the role of a .dockerignore file when building Docker images?", "answers": ["It specifies which files and directories to exclude from the image build context.", "It controls which files are included in the final image, ignoring unnecessary dependencies.", "It defines the order in which files are processed during the image build process.", "It prevents Docker from overwriting existing files in the image."], "explanation": "The .dockerignore file is crucial in specifying which files and directories should be excluded from the Docker image build context. This helps optimize the image size by excluding unnecessary files and ensures that only relevant content is included in the final image."}, "correct_response": ["a"], "section": ".dockerignore File", "question_plain": "What is the role of a .dockerignore file when building Docker images?", "related_lectures": []}, {"_class": "assessment", "id": 74213080, "assessment_type": "multiple-choice", "prompt": {"question": "Which Dockerfile instruction is used to set environment variables within the container that is being built?", "answers": ["ENV", "SET", "EXPORT", "VAR"], "explanation": "The ENV instruction in a Dockerfile is used to set environment variables within the container being built. It allows you to define key-value pairs for environment variables, which can be utilized by applications running in the container. This instruction provides flexibility and consistency when configuring the environment for containerized applications."}, "correct_response": ["a"], "section": "Dockerfile Environment", "question_plain": "Which Dockerfile instruction is used to set environment variables within the container that is being built?", "related_lectures": []}, {"_class": "assessment", "id": 74213082, "assessment_type": "multiple-choice", "prompt": {"question": "In a Dockerfile, how do the ADD and COPY instructions differ in functionality?", "answers": ["ADD can extract compressed files and copy remote files; COPY is for copying local files only.", "COPY is more efficient for copying local files, while ADD has additional features for URL and compressed file handling.", "ADD is specifically designed for copying local files, while COPY can handle remote files and URLs.", "COPY should be used for extracting compressed files, and ADD is ideal for copying local files."], "explanation": "The main difference between ADD and COPY in a Dockerfile lies in their functionalities. COPY is recommended for copying local files efficiently, while ADD has additional features like extracting compressed files and handling remote files. Understanding these differences is crucial for optimizing Dockerfile performance and meeting specific use cases."}, "correct_response": ["b"], "section": "Dockerfile Instructions", "question_plain": "In a Dockerfile, how do the ADD and COPY instructions differ in functionality?", "related_lectures": []}, {"_class": "assessment", "id": 74213084, "assessment_type": "multiple-choice", "prompt": {"question": "For a Docker image created for production use, why might you choose to specify a non-root user with the USER instruction?", "answers": ["To enhance security by reducing the impact of potential security vulnerabilities in the application running inside the container.", "To improve performance and resource utilization, as non-root users have limited access rights.", "To comply with industry regulations that require non-root users for production environments.", "To simplify troubleshooting and debugging processes by avoiding permission issues with non-root users."], "explanation": "Specifying a non-root user with the USER instruction in a Dockerfile for a production image is a security best practice. It helps mitigate the impact of potential security vulnerabilities in the application, enhancing overall container security. This practice aligns with the principle of least privilege and is crucial for maintaining a secure production environment."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "For a Docker image created for production use, why might you choose to specify a non-root user with the USER instruction?", "related_lectures": []}, {"_class": "assessment", "id": 74213086, "assessment_type": "multiple-choice", "prompt": {"question": "When trying to optimize the build speed and the size of a Docker image, what are some best practices to follow regarding the ordering of instructions in a Dockerfile?", "answers": ["Place frequently changing instructions, like package installations, toward the end of the Dockerfile to leverage caching.", "Group similar instructions together and order them based on their likelihood to change.", "Use multi-stage builds to separate build dependencies from the final image.", "Minimize the number of layers by chaining RUN commands and removing unnecessary files in a single step."], "explanation": "Optimizing build speed and image size in a Dockerfile involves careful consideration of instruction ordering. Grouping similar instructions together and ordering them based on their likelihood to change can leverage caching effectively. Multi-stage builds help separate build dependencies, reducing the final image size. Minimizing the number of layers by chaining RUN commands enhances overall performance."}, "correct_response": ["b"], "section": "Dockerfile Optimization", "question_plain": "When trying to optimize the build speed and the size of a Docker image, what are some best practices to follow regarding the ordering of instructions in a Dockerfile?", "related_lectures": []}, {"_class": "assessment", "id": 74213088, "assessment_type": "multiple-choice", "prompt": {"question": "The command used to upload a built image to Docker Hub is docker _______.", "answers": ["push", "upload", "save", "export"], "explanation": "The correct command to upload a built image to Docker Hub is docker push. This command pushes the image to the specified repository on Docker Hub, making it accessible to others."}, "correct_response": ["a"], "section": "Docker Hub, Image Deployment", "question_plain": "The command used to upload a built image to Docker Hub is docker _______.", "related_lectures": []}, {"_class": "assessment", "id": 74213090, "assessment_type": "multiple-choice", "prompt": {"question": "The Dockerfile instruction _______ is used to execute commands during the build process that typically install software packages.", "answers": ["RUN", "EXEC", "INSTALL", "CMD"], "explanation": "The RUN instruction in a Dockerfile is used to execute commands during the build process. It is commonly used for installing software packages and configuring the environment within the image."}, "correct_response": ["a"], "section": "Dockerfile Instructions", "question_plain": "The Dockerfile instruction _______ is used to execute commands during the build process that typically install software packages.", "related_lectures": []}, {"_class": "assessment", "id": 74213092, "assessment_type": "multiple-choice", "prompt": {"question": "To create a mount point with the specified name and mark it as holding externally mounted volumes from the native host or other containers, use the VOLUME _______ instruction in the Dockerfile.", "answers": ["POINT", "NAME", "CREATE", "keyword"], "explanation": "The VOLUME keyword is used in the Dockerfile instruction to create a mount point with a specified name. It is used to mark the directory as a volume, indicating that it can hold externally mounted volumes from the native host or other containers. This is essential for persisting data outside the container."}, "correct_response": ["d"], "section": "Docker Volumes, Dockerfile", "question_plain": "To create a mount point with the specified name and mark it as holding externally mounted volumes from the native host or other containers, use the VOLUME _______ instruction in the Dockerfile.", "related_lectures": []}, {"_class": "assessment", "id": 74213094, "assessment_type": "multiple-choice", "prompt": {"question": "To minimize layers and reduce the size of a Docker image, multiple commands can be combined into a single RUN instruction using _______.", "answers": ["Shell Scripting", "&amp;&amp; Operator", "CONCAT Operator", "COMBINE Statement"], "explanation": "To minimize layers and reduce Docker image size, multiple commands can be combined into a single RUN instruction using the &amp;&amp; operator. This ensures that each command is executed within the same layer, reducing the number of layers and optimizing the image size."}, "correct_response": ["b"], "section": "Docker Image Optimization", "question_plain": "To minimize layers and reduce the size of a Docker image, multiple commands can be combined into a single RUN instruction using _______.", "related_lectures": []}, {"_class": "assessment", "id": 74213096, "assessment_type": "multiple-choice", "prompt": {"question": "The ONBUILD instruction in a Dockerfile is used to execute commands at a later time, specifically when the image is used as the base for another build, making it _______.", "answers": ["Delayed Execution", "Build Deferred", "Dynamic Execution", "On-Demand Execution"], "explanation": "The ONBUILD instruction in a Dockerfile is used for delayed execution. It allows commands to be executed at a later time when the image is used as the base for another build. This feature makes it possible to define actions that should be taken when the image is extended, providing flexibility and customization in subsequent builds."}, "correct_response": ["a"], "section": "Dockerfile ONBUILD", "question_plain": "The ONBUILD instruction in a Dockerfile is used to execute commands at a later time, specifically when the image is used as the base for another build, making it _______.", "related_lectures": []}, {"_class": "assessment", "id": 74213098, "assessment_type": "multiple-choice", "prompt": {"question": "A multi-stage build in a Dockerfile allows you to _______ stages for intermediate builds to optimize the final image size.", "answers": ["Combine", "Isolate", "Eliminate", "Segregate"], "explanation": "A multi-stage build in a Dockerfile allows you to eliminate stages for intermediate builds to optimize the final image size. By using only the necessary artifacts from previous stages, you can create a more streamlined and efficient final image, reducing its overall size and improving performance."}, "correct_response": ["c"], "section": "Multi-Stage Docker Builds", "question_plain": "A multi-stage build in a Dockerfile allows you to _______ stages for intermediate builds to optimize the final image size.", "related_lectures": []}, {"_class": "assessment", "id": 74213100, "assessment_type": "multiple-choice", "prompt": {"question": "You are tasked with reducing the build time of Docker images in a continuous integration pipeline. What strategies involving Docker Hub and Dockerfile optimizations could you apply?", "answers": ["Using multi-stage builds to reduce layer count and size.", "Utilizing Docker caching effectively by ordering commands to maximize cache reuse.", "Employing Docker image layer pruning to remove unnecessary layers.", "Leveraging Docker Hub build triggers to automate image builds."], "explanation": "To reduce Docker image build time, employing multi-stage builds helps minimize layers and size. Effective use of caching, layer pruning, and Docker Hub build triggers further optimize the process, streamlining continuous integration pipeline efficiency."}, "correct_response": ["a"], "section": "Docker Build Optimization", "question_plain": "You are tasked with reducing the build time of Docker images in a continuous integration pipeline. What strategies involving Docker Hub and Dockerfile optimizations could you apply?", "related_lectures": []}, {"_class": "assessment", "id": 74213102, "assessment_type": "multiple-choice", "prompt": {"question": "A security vulnerability has been identified in a base image that your Dockerfile uses. Explain the steps you would take to update your Docker image and registry.", "answers": ["Identify the vulnerable package and version, then update the Dockerfile to use a patched base image.", "Regularly monitor security advisories and update base images promptly.", "Rebuild the Docker image with the updated base image and push it to the registry.", "Implement automated vulnerability scanning in the CI/CD pipeline."], "explanation": "To address a security vulnerability, identify the affected package, update the Dockerfile, rebuild the image, and push it to the registry. Regular monitoring, proactive updates, and automated vulnerability scanning contribute to maintaining a secure Docker image and registry."}, "correct_response": ["c"], "section": "Docker Security", "question_plain": "A security vulnerability has been identified in a base image that your Dockerfile uses. Explain the steps you would take to update your Docker image and registry.", "related_lectures": []}, {"_class": "assessment", "id": 74213104, "assessment_type": "multiple-choice", "prompt": {"question": "Your development team needs to switch between different versions of a software stack for testing. How can Docker Hub and Dockerfile best practices be leveraged to manage these versions efficiently?", "answers": ["Use version tags in the Dockerfile and Docker Hub for clear versioning.", "Implement a versioning strategy using semantic versioning (SemVer).", "Utilize Docker image labels to specify version information.", "Leverage Docker image manifests for version control."], "explanation": "Efficient version management in Docker involves using version tags in the Dockerfile and Docker Hub, providing clear versioning. Implementing a versioning strategy, using labels, and leveraging image manifests contribute to organized and controlled software stack testing."}, "correct_response": ["a"], "section": "Docker Version Management", "question_plain": "Your development team needs to switch between different versions of a software stack for testing. How can Docker Hub and Dockerfile best practices be leveraged to manage these versions efficiently?", "related_lectures": []}]};
+    var correct = 0;
+    var total = 0;
+    const questionData = quizData.questions
+    const passPercent = quizData.pass_percent
+    function kiemTraDapAn(correctMuti, choise) {
+      // Chuyển đổi các số trong choise thành chữ cái tương ứng
+      const choiseLetters = choise.map(num => String.fromCharCode(parseInt(num) + 'a'.charCodeAt(0)));
+      console.log('choiseLetters',choiseLetters)
+      // Kiểm tra điều kiện:
+      // 1. Chiều dài hai mảng phải bằng nhau
+      // 2. Tất cả các phần tử trong choiseLetters phải có trong correctMuti
+      if (
+        choiseLetters.length === correctMuti.length &&
+        choiseLetters.every(c => correctMuti.includes(c))
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    function main() {
+      total = questionData.length;
+
+      var questions = [];
+      for (var i = 0; i < questionData.length; i++) {
+        var question = questionData[i];
+        var questionText = question.prompt.question;
+        var answers = question.prompt.answers;
+        var correctAnswer = question.correct_response[0];
+        var correctMuti = question.correct_response;
+        var correctAnswerText = answers[correctAnswer.charCodeAt(0) - 97];
+        var questionObj = {
+          question: questionText,
+          correctAnswer: correctAnswerText,
+          answers: answers,
+          id: question.id,
+          explanation: question.prompt.explanation,
+          correctMuti
+
+        };
+        questions.push(questionObj);
+      }
+      console.log(questions.filter(i => i.correctMuti.length > 1))
+
+      updateScore();
+
+      // display the questions
+      var questionsContainer = document.getElementById("quiz-container");
+      for (var i = 0; i < questions.length; i++) {
+        var question = questions[i];
+        var questionElement = document.createElement("form");
+        questionElement.className = "question";
+        questionElement.innerHTML =
+          "<span>Question " +
+          (i + 1) +
+          ":</span>" +
+          '<div class="question-prompt">' +
+          question.question +
+          "</div>";
+        questionElement.id = question.id;
+        questionElement.classList.add("quiz-container");
+        var answersElement = document.createElement("ul");
+        answersElement.className = "answers";
+        console.log('question.correctMuti', question.correctMuti.length)
+        if (question.correctMuti.length > 1) {
+          for (var j = 0; j < question.answers.length; j++) {
+            var answer = question.answers[j];
+            var answerElement = document.createElement("li");
+            answerElement.className = "answer";
+            answerElement.innerHTML =
+              '<label for="input-' +
+              question.id +
+              "-" +
+              j +
+              '"><div onclick="select2(' +
+              question.id +
+              ", " +
+              j +
+              ')"><input id="input-' +
+              question.id +
+              "-" +
+              j +
+              '" type="checkbox" name="question' +
+              i +
+              '" value="' +
+              j +
+              '">' +
+              answer +
+              "</input></div></label>";
+            answerElement.classList.add("question-answer");
+            answersElement.appendChild(answerElement);
+          }
+        } else {
+          for (var j = 0; j < question.answers.length; j++) {
+            var answer = question.answers[j];
+            var answerElement = document.createElement("li");
+            answerElement.className = "answer";
+            answerElement.innerHTML =
+              '<label for="input-' +
+              question.id +
+              "-" +
+              j +
+              '"><div onclick="select(' +
+              question.id +
+              ", " +
+              j +
+              ')"><span></span><input id="input-' +
+              question.id +
+              "-" +
+              j +
+              '" type="radio" name="question' +
+              i +
+              '" value="' +
+              j +
+              '">' +
+              answer +
+              "</input></div></label>";
+            answerElement.classList.add("question-answer");
+            answersElement.appendChild(answerElement);
+          }
+        }
+        questionElement.appendChild(answersElement);
+
+        // add a submit button
+        var submitButton = document.createElement("button");
+        submitButton.className = "submit";
+        submitButton.innerHTML = "Submit";
+        submitButton.classList.add("submit-button");
+
+        submitButton.addEventListener("click", function (e) {
+          e.preventDefault();
+          var questionElement = e.target.parentElement;
+          var questionId = questionElement.id;
+          var question = questions.filter(function (q) {
+            return q.id == questionId;
+          })[0];
+
+          // set the border color of all answers to black
+          var answers = questionElement.getElementsByClassName("answer");
+          for (var i = 0; i < answers.length; i++) {
+            console.log(answers[i]);
+            answers[i].children[0].style.borderColor = "#1c1d1f";
+          }
+
+          var answer = questionElement.querySelector(
+            'input[type="radio"]:checked'
+          );
+          var mutilanswer = questionElement.querySelectorAll(
+            'input[type="checkbox"]:checked'
+          );
+          if (answer) {
+            var answerIndex = answer.value;
+            var answerText = question.answers[answerIndex];
+            if (answerText == question.correctAnswer) {
+              answer.parentElement.parentElement.style.borderColor =
+                "limegreen";
+              // alert("Correct!");
+              correct++;
+              updateScore();
+              questionElement.innerHTML += question.explanation
+
+            } else {
+              answer.parentElement.parentElement.style.borderColor = "red";
+              // alert("Incorrect!");
+            }
+          }
+          if (mutilanswer) {
+            var answerIndex = [...mutilanswer].map(a => a.value);
+
+            if (kiemTraDapAn(question.correctMuti, answerIndex)) {
+              [...mutilanswer].map(item => {
+                item.parentElement.parentElement.style.borderColor =
+                "limegreen";
+              })
+              // alert("Correct!");
+              correct++;
+              updateScore();
+              questionElement.innerHTML += question.explanation
+            } else {
+              [...mutilanswer].map(item => {
+                item.parentElement.parentElement.style.borderColor =
+                "red";
+              })
+            }
+            // var answerText = question.answers[answerIndex];
+            // if (answerText == question.correctAnswer) {
+            //   answer.parentElement.parentElement.style.borderColor =
+            //     "limegreen";
+            //   // alert("Correct!");
+            //   correct++;
+            //   updateScore();
+            //   questionElement.innerHTML += question.explanation
+
+            // } else {
+            //   answer.parentElement.parentElement.style.borderColor = "red";
+            //   // alert("Incorrect!");
+            // }
+          }
+          // else {
+          //   alert("Please select an answer.");
+          // }
+
+        });
+
+        // add button
+        questionElement.appendChild(submitButton);
+
+        questionsContainer.appendChild(questionElement);
+      }
+    }
+
+    function select(question, answer) {
+      var questionElement = document.getElementById(question);
+      var answers = questionElement.getElementsByClassName("answer");
+      for (var i = 0; i < answers.length; i++) {
+        var span = answers[i].children[0].children[0].children[0];
+        var input = answers[i].children[0].children[0].children[1];
+        span.classList.remove("selected");
+        input.checked = false;
+      }
+      var span = answers[answer].children[0].children[0].children[0];
+      var input = answers[answer].children[0].children[0].children[1];
+      span.classList.add("selected");
+      input.checked = true;
+    }
+    function select2(question, answer) {
+      var questionElement = document.getElementById(question);
+      var answers = questionElement.getElementsByClassName("answer");
+      // for (var i = 0; i < answers.length; i++) {
+      //   var span = answers[i].children[0].children[0].children[0];
+      //   var input = answers[i].children[0].children[0].children[1];
+      //   if(input.checked){
+      //     span.classList.remove("selected");
+      //     input.checked = false;
+      //   }
+
+      // }
+      // var span = answers[answer].children[0].children[0].children[0];
+      // var input = answers[answer].children[0].children[0].children[1];
+      // span.classList.add("selected");
+      // input.checked = true;
+    }
+    function updateScore() {
+      var scoreElem = document.getElementById("score");
+      const score = (correct / total) * 100;
+      scoreElem.innerHTML = "Score: " + score + "/" + passPercent + "%";
+    }
+  </script>
+</body>
+
+</html>
