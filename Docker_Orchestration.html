@@ -1,1 +1,389 @@
 
+Almost out of storage … If you run out, you can't create, edit, and upload files.
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz</title>
+
+  <style>
+    body {
+      font-family: sf pro text, -apple-system, BlinkMacSystemFont, Roboto,
+        segoe ui, Helvetica, Arial, sans-serif, apple color emoji,
+        segoe ui emoji, segoe ui symbol;
+      font-weight: 400;
+      line-height: 22.4px;
+      font-size: 16px;
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    ul,
+    ol {
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      max-width: none;
+    }
+
+    code {
+      background-color: #fff;
+      border: 1px solid #d1d7dc;
+      color: #b4690e;
+      font-size: 90%;
+      padding: 0.2rem 0.4rem;
+    }
+
+    .quiz-content {
+      padding: 2.4rem;
+      word-break: break-word;
+      max-width: 86rem;
+      margin: 0 auto;
+    }
+
+    .quiz-container {
+      margin: 0 auto;
+      max-width: 84rem;
+      padding: 0;
+    }
+
+    .question {
+      margin-bottom: 5rem;
+    }
+
+    .question span {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .question-prompt {
+      margin-top: 0.8rem;
+      font-weight: 700;
+    }
+
+    .question-answer {
+      margin-top: 1.6rem;
+      padding-left: 0;
+      box-sizing: border-box;
+    }
+
+    .question-answer label {
+      max-width: 80rem;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      min-width: 18rem;
+      border: solid #1c1d1f 2px;
+    }
+
+    .question-answer div {
+      padding: 0.5rem;
+      width: 100%;
+    }
+
+    .question-answer div:hover {
+      background-color: #f5f5f5;
+    }
+
+    /* .question-answer input {
+      display: none;
+    } */
+
+    .question-answer span {
+      width: 1rem;
+      height: 1rem;
+      margin-right: 1.6rem;
+      top: 0;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+      border: 0.2rem solid #1c1d1f;
+      position: relative;
+    }
+
+    .selected {
+      background: #1c1d1f;
+      box-shadow: 0 0 0 0.4rem #fff inset;
+    }
+
+    .score {
+      position: fixed;
+      background-color: #b4690e;
+      padding: 10px;
+      color: white;
+    }
+  </style>
+</head>
+
+<body onload="main()">
+  <div id="score" class="score">
+    <span>Score: N/A of N/A</span>
+  </div>
+  <div id="quiz-container" class="quiz-content"></div>
+
+  <script>
+    const quizData = {"pass_percent": 50, "questions": [{"_class": "assessment", "id": 73184320, "assessment_type": "multiple-choice", "prompt": {"question": "The _______ driver in Docker is often used in production environments to manage container networking and facilitate service discovery.", "answers": ["Bridge", "Host", "Overlay", "Macvlan"], "explanation": "The Overlay driver in Docker is often used in production environments to manage container networking and facilitate service discovery. It enables communication between containers across different Docker hosts, essential for distributed applications."}, "correct_response": ["c"], "section": "Docker Networking", "question_plain": "The _______ driver in Docker is often used in production environments to manage container networking and facilitate service discovery.", "related_lectures": []}, {"_class": "assessment", "id": 73184294, "assessment_type": "multiple-choice", "prompt": {"question": "The process of automatically distributing incoming traffic across multiple containers to ensure even load is known as _______ balancing.", "answers": ["Load", "Traffic", "Container", "Load"], "explanation": "The process of automatically distributing incoming traffic across multiple containers to ensure even load is known as traffic balancing. This ensures that each container receives a fair share of requests, optimizing resource usage."}, "correct_response": ["b"], "section": "Docker Orchestration", "question_plain": "The process of automatically distributing incoming traffic across multiple containers to ensure even load is known as _______ balancing.", "related_lectures": []}, {"_class": "assessment", "id": 73184296, "assessment_type": "multiple-choice", "prompt": {"question": "Container _______ refers to the capability of an orchestration tool to adjust the number of containers based on the workload automatically.", "answers": ["Scaling", "Balancing", "Adjustment", "Orchestration"], "explanation": "Container scaling refers to the capability of an orchestration tool to adjust the number of containers based on the workload automatically. This ensures optimal performance and resource utilization."}, "correct_response": ["a"], "section": "Docker Orchestration", "question_plain": "Container _______ refers to the capability of an orchestration tool to adjust the number of containers based on the workload automatically.", "related_lectures": []}, {"_class": "assessment", "id": 73184298, "assessment_type": "multiple-choice", "prompt": {"question": "An orchestration tool uses _______ templates to manage the deployment and configuration of services.", "answers": ["Configuration", "Manifest", "Service", "Dockerfile"], "explanation": "An orchestration tool uses manifest templates to manage the deployment and configuration of services. These templates define how services should be deployed, their configurations, and other relevant information."}, "correct_response": ["b"], "section": "Docker Orchestration", "question_plain": "An orchestration tool uses _______ templates to manage the deployment and configuration of services.", "related_lectures": []}, {"_class": "assessment", "id": 73184300, "assessment_type": "multiple-choice", "prompt": {"question": "You are tasked with ensuring zero downtime during deployments in a high-traffic application. Which orchestration strategy would you employ to achieve this?", "answers": ["Blue-Green Deployment", "Canary Deployment", "Rolling Deployment", "Shadow Deployment"], "explanation": "To achieve zero downtime during deployments in a high-traffic application, you would use a Rolling Deployment strategy. This involves gradually replacing instances of the old version with the new one, ensuring continuous availability."}, "correct_response": ["c"], "section": "Docker Orchestration Strategies", "question_plain": "You are tasked with ensuring zero downtime during deployments in a high-traffic application. Which orchestration strategy would you employ to achieve this?", "related_lectures": []}, {"_class": "assessment", "id": 73184302, "assessment_type": "multiple-choice", "prompt": {"question": "Your containerized application requires consistent performance despite fluctuating workloads. How would you configure an orchestration tool to automatically handle this?", "answers": ["Dynamic Scaling", "Load Balancing", "Auto Scaling", "Service Discovery"], "explanation": "To ensure consistent performance despite fluctuating workloads, you would configure the orchestration tool for Auto Scaling. This allows the system to automatically adjust the number of container instances based on demand, maintaining performance."}, "correct_response": ["c"], "section": "Docker Orchestration", "question_plain": "Your containerized application requires consistent performance despite fluctuating workloads. How would you configure an orchestration tool to automatically handle this?", "related_lectures": []}, {"_class": "assessment", "id": 73184304, "assessment_type": "multiple-choice", "prompt": {"question": "A company&#x27;s policy requires that its data processing containers must be geographically distributed for redundancy. Which feature of orchestration tools can be used to comply with this requirement?", "answers": ["Multi-Region Deployment", "Geographic Load Balancing", "Global Services", "Replicated Services"], "explanation": "To comply with the policy of geographically distributed containers for redundancy, you would use the Global Services feature of orchestration tools. This ensures that services are deployed and replicated across multiple geographic regions."}, "correct_response": ["c"], "section": "Docker Orchestration Strategies", "question_plain": "A company&#x27;s policy requires that its data processing containers must be geographically distributed for redundancy. Which feature of orchestration tools can be used to comply with this requirement?", "related_lectures": []}, {"_class": "assessment", "id": 73184306, "assessment_type": "multiple-choice", "prompt": {"question": "What is the role of a service discovery tool in a Docker orchestrated environment?", "answers": ["Discovering new containers", "Managing service configurations", "Maintaining container logs", "Balancing network traffic"], "explanation": "A service discovery tool in a Docker orchestrated environment plays a crucial role in discovering new containers. It helps in identifying and keeping track of the containers available in the cluster, facilitating effective communication between services."}, "correct_response": ["a"], "section": "Docker Orchestration", "question_plain": "What is the role of a service discovery tool in a Docker orchestrated environment?", "related_lectures": []}, {"_class": "assessment", "id": 73184308, "assessment_type": "multiple-choice", "prompt": {"question": "Which Docker command is used to scale the number of replicas for a service?", "answers": ["docker update", "docker scale", "docker deploy", "docker replicate"], "explanation": "The correct Docker command to scale the number of replicas for a service is docker scale. This command allows you to adjust the number of running instances for a particular service in a Docker Swarm."}, "correct_response": ["b"], "section": "Docker Swarm", "question_plain": "Which Docker command is used to scale the number of replicas for a service?", "related_lectures": []}, {"_class": "assessment", "id": 73184310, "assessment_type": "multiple-choice", "prompt": {"question": "How does Docker Swarm ensure high availability of services?", "answers": ["Automatic load balancing", "Multi-host networking", "Swarm manager election", "Continuous monitoring of containers"], "explanation": "Docker Swarm ensures high availability of services through swarm manager election. The manager nodes elect a leader to coordinate and manage the cluster, providing fault tolerance and ensuring that services remain available even if some nodes fail."}, "correct_response": ["c"], "section": "Docker Swarm", "question_plain": "How does Docker Swarm ensure high availability of services?", "related_lectures": []}, {"_class": "assessment", "id": 73184312, "assessment_type": "multiple-choice", "prompt": {"question": "Describe how Docker&#x27;s routing mesh works in handling service discovery and load balancing within a Swarm cluster.", "answers": ["Round-robin load balancing", "Overlay network routing", "Ingress network mode", "Bridge network mode"], "explanation": "Docker&#x27;s routing mesh in Swarm clusters uses the Ingress network mode to handle service discovery and load balancing. It allows external access to services and distributes incoming traffic among the available nodes in the cluster."}, "correct_response": ["c"], "section": "Docker Swarm", "question_plain": "Describe how Docker&#x27;s routing mesh works in handling service discovery and load balancing within a Swarm cluster.", "related_lectures": []}, {"_class": "assessment", "id": 73184314, "assessment_type": "multiple-choice", "prompt": {"question": "What strategies are essential when managing databases and other stateful services in an orchestrated Docker environment to ensure data persistence?", "answers": ["Use ephemeral storage", "Rely on host machine storage", "Utilize Docker volumes", "Store data directly in containers"], "explanation": "Essential strategies for managing databases and stateful services in Docker include utilizing Docker volumes. Volumes provide persistent and shareable storage outside the container, ensuring data persistence even if the container is stopped or removed."}, "correct_response": ["c"], "section": "Docker Orchestration", "question_plain": "What strategies are essential when managing databases and other stateful services in an orchestrated Docker environment to ensure data persistence?", "related_lectures": []}, {"_class": "assessment", "id": 73184316, "assessment_type": "multiple-choice", "prompt": {"question": "How do orchestration tools like Kubernetes manage stateful applications differently than stateless ones?", "answers": ["They treat all applications the same way", "They use StatefulSets for stateful applications", "They rely on manual configurations", "They prioritize stateless applications"], "explanation": "Orchestration tools like Kubernetes manage stateful applications differently by using StatefulSets. StatefulSets provide guarantees about the ordering and uniqueness of pods, making them suitable for stateful workloads that require stable network identities and persistent storage."}, "correct_response": ["b"], "section": "Kubernetes", "question_plain": "How do orchestration tools like Kubernetes manage stateful applications differently than stateless ones?", "related_lectures": []}, {"_class": "assessment", "id": 73184318, "assessment_type": "multiple-choice", "prompt": {"question": "Docker Swarm uses the _______ mode to ensure that a service&#x27;s request can reach any node, regardless of whether that node is running an instance of the service.", "answers": ["Routing Mesh", "Overlay", "Ingress", "Replicated"], "explanation": "Docker Swarm uses the Routing Mesh mode to ensure that a service&#x27;s request can reach any node, regardless of whether that node is running an instance of the service. The Routing Mesh routes incoming requests to an available node running the service."}, "correct_response": ["a"], "section": "Docker Swarm", "question_plain": "Docker Swarm uses the _______ mode to ensure that a service&#x27;s request can reach any node, regardless of whether that node is running an instance of the service.", "related_lectures": []}, {"_class": "assessment", "id": 73184242, "assessment_type": "multiple-choice", "prompt": {"question": "What is a primary factor to consider when deciding between using Docker Swarm and Kubernetes for orchestration?", "answers": ["Ease of Use", "Community Support", "Scalability", "Compatibility"], "explanation": "One primary factor when choosing between Docker Swarm and Kubernetes is scalability. Kubernetes is known for its robust scalability features, making it suitable for larger and more complex containerized applications. Docker Swarm, on the other hand, is often praised for its ease of use, making it a consideration for simpler deployments."}, "correct_response": ["c"], "section": "Container Orchestration", "question_plain": "What is a primary factor to consider when deciding between using Docker Swarm and Kubernetes for orchestration?", "related_lectures": []}, {"_class": "assessment", "id": 73184322, "assessment_type": "multiple-choice", "prompt": {"question": "For managing stateful applications, Docker provides the _______ command to help maintain data when containers are updated or migrated.", "answers": ["Volume", "Snapshot", "Persist", "Preserve"], "explanation": "For managing stateful applications, Docker provides the Volume command to help maintain data when containers are updated or migrated. Volumes provide persistent storage, allowing data to survive container restarts and updates."}, "correct_response": ["a"], "section": "Docker Volumes", "question_plain": "For managing stateful applications, Docker provides the _______ command to help maintain data when containers are updated or migrated.", "related_lectures": []}, {"_class": "assessment", "id": 73184324, "assessment_type": "multiple-choice", "prompt": {"question": "In Kubernetes, a _______ is a resource used to manage and store persistent data for stateful applications.", "answers": ["PersistentVolume", "StatefulSet", "ConfigMap", "Pod"], "explanation": "In Kubernetes, a PersistentVolume is a resource used to manage and store persistent data for stateful applications. It allows decoupling storage configuration from pod specifications, providing durability and data retention."}, "correct_response": ["a"], "section": "Kubernetes Storage", "question_plain": "In Kubernetes, a _______ is a resource used to manage and store persistent data for stateful applications.", "related_lectures": []}, {"_class": "assessment", "id": 73184326, "assessment_type": "multiple-choice", "prompt": {"question": "The _______ component in Kubernetes plays a critical role in service discovery and load balancing for pods.", "answers": ["Kube Proxy", "Kube Scheduler", "Kube Controller Manager", "Kube DNS"], "explanation": "The Kube DNS component in Kubernetes plays a critical role in service discovery and load balancing for pods. It enables communication between pods using their names, abstracting away the underlying network details."}, "correct_response": ["d"], "section": "Kubernetes Networking", "question_plain": "The _______ component in Kubernetes plays a critical role in service discovery and load balancing for pods.", "related_lectures": []}, {"_class": "assessment", "id": 73184328, "assessment_type": "multiple-choice", "prompt": {"question": "To handle session persistence in load balancing within Docker Swarm, you need to configure _______ policies.", "answers": ["Affinity", "Drain", "Spread", "Constraint"], "explanation": "To handle session persistence in load balancing within Docker Swarm, you need to configure Affinity policies. Affinity ensures that tasks of a service are deployed on the same node, helping maintain session state for stateful applications."}, "correct_response": ["a"], "section": "Docker Swarm Load Balancing", "question_plain": "To handle session persistence in load balancing within Docker Swarm, you need to configure _______ policies.", "related_lectures": []}, {"_class": "assessment", "id": 73184330, "assessment_type": "multiple-choice", "prompt": {"question": "You&#x27;re deploying a distributed microservices application using Docker. Describe how you would implement service discovery to efficiently route requests to the appropriate services.", "answers": ["Use Docker Compose", "Utilize Docker Swarm", "Implement Consul or etcd", "Integrate with Kubernetes"], "explanation": "To implement efficient service discovery in a microservices architecture, one can use tools like Consul or etcd. These distributed key-value stores help services discover and communicate with each other dynamically. They provide a central registry for service addresses and configurations, ensuring seamless communication in a distributed environment."}, "correct_response": ["c"], "section": "Docker Orchestration", "question_plain": "You&#x27;re deploying a distributed microservices application using Docker. Describe how you would implement service discovery to efficiently route requests to the appropriate services.", "related_lectures": []}, {"_class": "assessment", "id": 73184332, "assessment_type": "multiple-choice", "prompt": {"question": "A company is using Docker Swarm to manage a cluster of containers. Explain how the company would manage persistent storage for a stateful application like a database.", "answers": ["Use Docker Volumes", "Employ Distributed Storage Systems", "Rely on Host Machine Storage", "Leverage Cloud Storage Solutions"], "explanation": "To manage persistent storage for stateful applications in a Docker Swarm cluster, utilizing distributed storage systems is crucial. Options like Docker Volumes are handy, but for scalability and reliability, distributed storage solutions, such as Ceph or GlusterFS, provide shared and resilient storage across the cluster."}, "correct_response": ["b"], "section": "Docker Swarm", "question_plain": "A company is using Docker Swarm to manage a cluster of containers. Explain how the company would manage persistent storage for a stateful application like a database.", "related_lectures": []}, {"_class": "assessment", "id": 73184334, "assessment_type": "multiple-choice", "prompt": {"question": "In a high-traffic web application deployed with Docker, explain how you would set up load balancing to evenly distribute the load across all containers.", "answers": ["Utilize Docker Compose for Load Balancing", "Implement Nginx as a Load Balancer", "Use Docker Swarm Routing Mesh", "Employ External Load Balancer"], "explanation": "Setting up load balancing for a high-traffic web application involves employing an external load balancer. This ensures even distribution of incoming requests among Docker containers. Options like Nginx or dedicated load balancing solutions can be configured to manage the traffic effectively and enhance application scalability."}, "correct_response": ["d"], "section": "Docker Networking", "question_plain": "In a high-traffic web application deployed with Docker, explain how you would set up load balancing to evenly distribute the load across all containers.", "related_lectures": []}, {"_class": "assessment", "id": 73184336, "assessment_type": "multiple-choice", "prompt": {"question": "What is a common tool or service used alongside Docker to automate the process of continuous deployment?", "answers": ["Jenkins", "Git", "Docker Compose", "Kubernetes"], "explanation": "Jenkins is a common tool used alongside Docker for continuous deployment. It automates the building and deployment of Docker containers, streamlining the continuous integration and continuous deployment (CI/CD) pipeline."}, "correct_response": ["a"], "section": "Docker Ecosystem", "question_plain": "What is a common tool or service used alongside Docker to automate the process of continuous deployment?", "related_lectures": []}, {"_class": "assessment", "id": 73184338, "assessment_type": "multiple-choice", "prompt": {"question": "Name a feature of Docker that ensures only trusted images are used in the deployment process.", "answers": ["Docker Hub", "Dockerfile", "Docker Registry", "Docker Content Trust"], "explanation": "Docker Content Trust is a feature that ensures only trusted images are used in the deployment process. It uses digital signatures to verify the authenticity and integrity of container images before they are pulled and deployed."}, "correct_response": ["d"], "section": "Docker Security", "question_plain": "Name a feature of Docker that ensures only trusted images are used in the deployment process.", "related_lectures": []}, {"_class": "assessment", "id": 73184340, "assessment_type": "multiple-choice", "prompt": {"question": "How does Docker help in rolling back a deployment if the new version of the application fails to work as expected?", "answers": ["Using Docker Compose", "Reverting to a previous image version", "Undoing changes in Dockerfile", "Running a Docker snapshot"], "explanation": "Docker facilitates rolling back a deployment by reverting to a previous image version. Each version of the application is stored as an image, allowing easy and quick rollback in case the new version encounters issues."}, "correct_response": ["b"], "section": "Docker Deployment Strategies", "question_plain": "How does Docker help in rolling back a deployment if the new version of the application fails to work as expected?", "related_lectures": []}, {"_class": "assessment", "id": 73184342, "assessment_type": "multiple-choice", "prompt": {"question": "In the context of continuous deployment, how does Docker Compose assist in managing multi-container applications?", "answers": ["Orchestrating containers", "Defining container stacks", "Managing networking", "Container monitoring"], "explanation": "Docker Compose helps in managing multi-container applications by allowing the definition of container stacks. It provides a simple YAML file where you can define the services, networks, and volumes, enabling easy configuration and deployment of interconnected containers."}, "correct_response": ["b"], "section": "Docker Compose", "question_plain": "In the context of continuous deployment, how does Docker Compose assist in managing multi-container applications?", "related_lectures": []}, {"_class": "assessment", "id": 73184344, "assessment_type": "multiple-choice", "prompt": {"question": "Describe a method for managing and updating Docker secrets in a continuous deployment pipeline.", "answers": ["Store secrets in environment variables", "Use Docker Hub for secret management", "Utilize Docker Configs", "Embed secrets in the application code"], "explanation": "In a continuous deployment pipeline, Docker secrets can be managed and updated using Docker Configs. This provides a secure way to handle sensitive information by storing it outside the application code and managing it separately."}, "correct_response": ["c"], "section": "Docker Secrets", "question_plain": "Describe a method for managing and updating Docker secrets in a continuous deployment pipeline.", "related_lectures": []}, {"_class": "assessment", "id": 73184290, "assessment_type": "multiple-choice", "prompt": {"question": "An orchestration tool ensures high availability by implementing _______ strategies for containers that fail or terminate unexpectedly.", "answers": ["Restart", "Backup", "Scaling", "Recovery"], "explanation": "An orchestration tool ensures high availability by implementing &quot;Restart&quot; strategies for containers that fail or terminate unexpectedly. This involves automatically restarting failed containers to maintain application availability."}, "correct_response": ["a"], "section": "Docker Orchestration", "question_plain": "An orchestration tool ensures high availability by implementing _______ strategies for containers that fail or terminate unexpectedly.", "related_lectures": []}, {"_class": "assessment", "id": 73184240, "assessment_type": "multiple-choice", "prompt": {"question": "Docker Swarm is primarily used for what purpose in a Docker-based environment?", "answers": ["Load Balancing", "Container Orchestration", "Network Isolation", "Virtualization"], "explanation": "Docker Swarm is primarily used for container orchestration in a Docker-based environment. It facilitates the management of multiple containers, their deployment, scaling, and networking, providing an efficient way to coordinate containerized applications."}, "correct_response": ["b"], "section": "Docker Swarm", "question_plain": "Docker Swarm is primarily used for what purpose in a Docker-based environment?", "related_lectures": []}, {"_class": "assessment", "id": 73184244, "assessment_type": "multiple-choice", "prompt": {"question": "Docker Swarm turns a pool of Docker hosts into a single, virtual Docker host. This is achieved through _______.", "answers": ["Swarm Manager", "Cluster Controller", "Node Aggregator", "Manager Node"], "explanation": "Docker Swarm turns a pool of Docker hosts into a single, virtual Docker host through a clustering tool known as Swarm Manager. The Swarm Manager is responsible for orchestrating the deployment and scaling of services across the Docker Swarm cluster, providing a unified interface to manage the cluster as a single entity."}, "correct_response": ["a"], "section": "Docker Swarm Clustering Tool", "question_plain": "Docker Swarm turns a pool of Docker hosts into a single, virtual Docker host. This is achieved through _______.", "related_lectures": []}, {"_class": "assessment", "id": 73184246, "assessment_type": "multiple-choice", "prompt": {"question": "How does Docker Swarm handle load balancing differently from Kubernetes?", "answers": ["Round Robin", "Source IP Hashing", "Least Connections", "Random"], "explanation": "Docker Swarm and Kubernetes use different load balancing strategies. Docker Swarm uses source IP hashing, which directs traffic based on the client&#x27;s IP address. This approach ensures that requests from the same client always reach the same container, improving session persistence."}, "correct_response": ["b"], "section": "Docker Swarm, Kubernetes", "question_plain": "How does Docker Swarm handle load balancing differently from Kubernetes?", "related_lectures": []}, {"_class": "assessment", "id": 73184248, "assessment_type": "multiple-choice", "prompt": {"question": "Describe a scenario where Docker Swarm&#x27;s routing mesh would be beneficial compared to Kubernetes\u2019 service discovery.", "answers": ["Multi-Region Deployments", "Microservices with Complex Dependencies", "Stateful Applications", "Legacy Monolithic Applications"], "explanation": "Docker Swarm&#x27;s routing mesh is beneficial in scenarios like multi-region deployments where service discovery can become complex. It simplifies routing by automatically forwarding requests to the appropriate service, regardless of the swarm node&#x27;s location."}, "correct_response": ["a"], "section": "Docker Swarm, Kubernetes", "question_plain": "Describe a scenario where Docker Swarm&#x27;s routing mesh would be beneficial compared to Kubernetes\u2019 service discovery.", "related_lectures": []}, {"_class": "assessment", "id": 73184250, "assessment_type": "multiple-choice", "prompt": {"question": "What are the implications of Kubernetes&#x27; more complex architecture compared to Docker Swarm in terms of operational overhead and scalability?", "answers": ["Greater Operational Overhead", "Slower Deployment Speed", "Reduced Scalability", "Improved Fault Tolerance"], "explanation": "Kubernetes&#x27; more complex architecture can lead to greater operational overhead. While it offers advanced features, managing a Kubernetes cluster may require more expertise and effort. However, this complexity also provides improved fault tolerance and scalability when properly configured."}, "correct_response": ["a"], "section": "Docker Swarm, Kubernetes", "question_plain": "What are the implications of Kubernetes&#x27; more complex architecture compared to Docker Swarm in terms of operational overhead and scalability?", "related_lectures": []}, {"_class": "assessment", "id": 73184252, "assessment_type": "multiple-choice", "prompt": {"question": "The Docker Swarm command to initialize a new swarm is docker swarm _______.", "answers": ["init", "start", "create", "deploy"], "explanation": "The correct command to initialize a new Docker Swarm is docker swarm init. This command sets up a new swarm, making the current machine a manager node."}, "correct_response": ["a"], "section": "Docker Swarm Basics", "question_plain": "The Docker Swarm command to initialize a new swarm is docker swarm _______.", "related_lectures": []}, {"_class": "assessment", "id": 73184254, "assessment_type": "multiple-choice", "prompt": {"question": "The equivalent of a Kubernetes pod in the context of Docker Swarm is a _______.", "answers": ["Cluster", "Service", "Stack", "Task"], "explanation": "In Docker Swarm, the equivalent of a Kubernetes pod is a &quot;Task.&quot; A task represents a running container on a worker node within the swarm."}, "correct_response": ["d"], "section": "Docker Swarm Concepts", "question_plain": "The equivalent of a Kubernetes pod in the context of Docker Swarm is a _______.", "related_lectures": []}, {"_class": "assessment", "id": 73184256, "assessment_type": "multiple-choice", "prompt": {"question": "In Docker Swarm, the command to create an overlay network is docker network create --driver _______.", "answers": ["bridge", "overlay", "host", "ingress"], "explanation": "The correct command to create an overlay network in Docker Swarm is docker network create --driver overlay. Overlay networks facilitate communication between services running on different nodes in the swarm."}, "correct_response": ["b"], "section": "Docker Networking in Swarm", "question_plain": "In Docker Swarm, the command to create an overlay network is docker network create --driver _______.", "related_lectures": []}, {"_class": "assessment", "id": 73184258, "assessment_type": "multiple-choice", "prompt": {"question": "To scale out a service in Docker Swarm, you would use the command docker service scale SERVICE=_______.", "answers": ["REPLICAS", "CONTAINERS", "INSTANCES", "WORKERS"], "explanation": "To scale out a service in Docker Swarm, you would use the command docker service scale SERVICE=REPLICAS. This command allows you to increase or decrease the number of replicas (instances) of a service running in the Swarm."}, "correct_response": ["a"], "section": "Docker Swarm", "question_plain": "To scale out a service in Docker Swarm, you would use the command docker service scale SERVICE=_______.", "related_lectures": []}, {"_class": "assessment", "id": 73184260, "assessment_type": "multiple-choice", "prompt": {"question": "The primary component in Kubernetes responsible for scheduling and managing workloads is known as the _______.", "answers": ["KUBE SCHEDULER", "KUBE MANAGER", "KUBE CONTROLLER", "KUBE API SERVER"], "explanation": "The primary component in Kubernetes responsible for scheduling and managing workloads is known as the KUBE SCHEDULER. It decides which node in the cluster should run a particular pod based on factors like resource availability and constraints."}, "correct_response": ["a"], "section": "Kubernetes Architecture", "question_plain": "The primary component in Kubernetes responsible for scheduling and managing workloads is known as the _______.", "related_lectures": []}, {"_class": "assessment", "id": 73184262, "assessment_type": "multiple-choice", "prompt": {"question": "In Kubernetes, the process of automatically placing and relocating containers based on resource requirements and other constraints is called _______.", "answers": ["POD SCHEDULING", "CONTAINER SCHEDULING", "NODE PLACEMENT", "AUTO SCALING"], "explanation": "In Kubernetes, the process of automatically placing and relocating containers based on resource requirements and other constraints is called POD SCHEDULING. The scheduler ensures efficient resource utilization and meets the specified requirements for running containers."}, "correct_response": ["a"], "section": "Kubernetes Scheduling", "question_plain": "In Kubernetes, the process of automatically placing and relocating containers based on resource requirements and other constraints is called _______.", "related_lectures": []}, {"_class": "assessment", "id": 73184264, "assessment_type": "multiple-choice", "prompt": {"question": "A company needs to deploy a highly available web application with zero downtime deployments and automatic failover. Would Docker Swarm or Kubernetes be more suitable, and why?", "answers": ["Docker Swarm", "Kubernetes", "Both are equally suitable", "Neither is suitable"], "explanation": "Kubernetes would be more suitable for this scenario. It provides advanced features like rolling updates, auto-scaling, and robust failover mechanisms, making it ideal for high-availability deployments with zero downtime."}, "correct_response": ["b"], "section": "Docker Orchestration", "question_plain": "A company needs to deploy a highly available web application with zero downtime deployments and automatic failover. Would Docker Swarm or Kubernetes be more suitable, and why?", "related_lectures": []}, {"_class": "assessment", "id": 73184268, "assessment_type": "multiple-choice", "prompt": {"question": "Your application requires complex orchestration, including advanced scheduling, autoscaling, and managing stateful sets. How would Kubernetes or Docker Swarm fulfill these requirements?", "answers": ["Docker Swarm", "Kubernetes", "Both are equally suitable", "It depends on specific requirements"], "explanation": "Kubernetes is the more suitable choice for complex orchestration needs. It excels in advanced scheduling, autoscaling, and managing stateful sets, providing a comprehensive solution for applications with intricate orchestration requirements."}, "correct_response": ["b"], "section": "Docker Orchestration", "question_plain": "Your application requires complex orchestration, including advanced scheduling, autoscaling, and managing stateful sets. How would Kubernetes or Docker Swarm fulfill these requirements?", "related_lectures": []}, {"_class": "assessment", "id": 73184266, "assessment_type": "multiple-choice", "prompt": {"question": "You are tasked with setting up a container orchestration platform for a small in-house development team that prioritizes ease of use and fast deployment. Which would you choose between Docker Swarm and Kubernetes?", "answers": ["Docker Swarm", "Kubernetes", "Both are equally suitable", "It depends on specific requirements"], "explanation": "Docker Swarm is the preferred choice for ease of use and fast deployment in a small team setting. It has a simpler architecture and is easier to set up, making it more user-friendly for smaller-scale projects."}, "correct_response": ["a"], "section": "Docker Orchestration", "question_plain": "You are tasked with setting up a container orchestration platform for a small in-house development team that prioritizes ease of use and fast deployment. Which would you choose between Docker Swarm and Kubernetes?", "related_lectures": []}, {"_class": "assessment", "id": 73184292, "assessment_type": "multiple-choice", "prompt": {"question": "Load balancing in a Docker orchestration environment is typically achieved by defining _______ rules.", "answers": ["Routing", "Scheduling", "Service", "Load"], "explanation": "Load balancing in a Docker orchestration environment is typically achieved by defining &quot;Service&quot; rules. A service in Docker orchestration represents a set of tasks running the same Docker image, and load balancing is managed across these tasks."}, "correct_response": ["c"], "section": "Docker Orchestration", "question_plain": "Load balancing in a Docker orchestration environment is typically achieved by defining _______ rules.", "related_lectures": []}, {"_class": "assessment", "id": 73184288, "assessment_type": "multiple-choice", "prompt": {"question": "In Docker Swarm, a group of interrelated services that share dependencies and can be co-scaled is defined as a _______.", "answers": ["Cluster", "Stack", "Service Mesh", "Docker Unit"], "explanation": "In Docker Swarm, a group of interrelated services that share dependencies and can be co-scaled is defined as a &quot;Stack.&quot; A stack is a way to deploy a set of services defined in a docker-compose.yml file, making it easy to manage and scale related services together."}, "correct_response": ["b"], "section": "Docker Swarm", "question_plain": "In Docker Swarm, a group of interrelated services that share dependencies and can be co-scaled is defined as a _______.", "related_lectures": []}, {"_class": "assessment", "id": 73184286, "assessment_type": "multiple-choice", "prompt": {"question": "In the context of orchestration, explain the concept of desired state versus actual state.", "answers": ["Desired state is predefined, and actual state is dynamic", "Desired state is dynamic, and actual state is predefined", "Desired state is the expected configuration, and actual state is the real-time status", "Desired state and actual state are the same"], "explanation": "In orchestration, the desired state represents the intended configuration of the system, while the actual state is the real-time status. Orchestration systems continuously work to align the actual state with the desired state, ensuring the system operates as intended."}, "correct_response": ["c"], "section": "Container Orchestration", "question_plain": "In the context of orchestration, explain the concept of desired state versus actual state.", "related_lectures": []}, {"_class": "assessment", "id": 73184284, "assessment_type": "multiple-choice", "prompt": {"question": "How does container orchestration manage service discovery when scaling containers across multiple hosts?", "answers": ["DNS-based discovery", "Load balancers", "Service registries", "All of the above"], "explanation": "Container orchestration systems often use service registries for managing service discovery. These registries keep track of available services and their locations. DNS-based discovery and load balancers can be integrated into the orchestration for effective scaling and balancing."}, "correct_response": ["c"], "section": "Container Orchestration", "question_plain": "How does container orchestration manage service discovery when scaling containers across multiple hosts?", "related_lectures": []}, {"_class": "assessment", "id": 73184282, "assessment_type": "multiple-choice", "prompt": {"question": "What is the difference between declarative and imperative approaches in container orchestration?", "answers": ["Specifies the sequence of steps", "Specifies the desired outcome", "Specifies the order of execution", "Specifies the individual commands"], "explanation": "Declarative approaches in container orchestration specify the desired outcome without detailing the steps. On the other hand, imperative approaches define the specific sequence of steps to achieve a goal. Declarative is more abstract and focuses on the end state, while imperative is more procedural."}, "correct_response": ["b"], "section": "Container Orchestration", "question_plain": "What is the difference between declarative and imperative approaches in container orchestration?", "related_lectures": []}, {"_class": "assessment", "id": 73184280, "assessment_type": "multiple-choice", "prompt": {"question": "When scaling containers using an orchestration tool, what metric is often used to determine the need to scale up or down?", "answers": ["CPU Usage", "Disk Space", "Network Latency", "Memory Consumption"], "explanation": "Orchestration tools often use CPU usage as a metric to determine scaling needs. Scaling based on CPU usage ensures that resources are allocated dynamically to meet the application&#x27;s demand, optimizing performance."}, "correct_response": ["a"], "section": "Docker Orchestration", "question_plain": "When scaling containers using an orchestration tool, what metric is often used to determine the need to scale up or down?", "related_lectures": []}, {"_class": "assessment", "id": 73184278, "assessment_type": "multiple-choice", "prompt": {"question": "In Docker Swarm, what is the role of a manager node in the context of scaling and orchestration?", "answers": ["Running application containers", "Handling container failover", "Controlling the swarm and orchestrating tasks", "Providing external access to services"], "explanation": "In Docker Swarm, a manager node plays a crucial role in scaling and orchestration. It controls the swarm, manages tasks distribution, and ensures the desired state of services, contributing to effective orchestration in the cluster."}, "correct_response": ["c"], "section": "Docker Swarm", "question_plain": "In Docker Swarm, what is the role of a manager node in the context of scaling and orchestration?", "related_lectures": []}, {"_class": "assessment", "id": 73184276, "assessment_type": "multiple-choice", "prompt": {"question": "How do orchestration tools handle the failover of containers in a Dockerized environment?", "answers": ["Restart on the same node", "Move to a new node", "Scale down the application", "Stop the container permanently"], "explanation": "Orchestration tools handle container failover by moving the failed container to a new node. This ensures high availability and reliability in the Dockerized environment. Restarting on the same node might not resolve underlying issues."}, "correct_response": ["b"], "section": "Docker Orchestration", "question_plain": "How do orchestration tools handle the failover of containers in a Dockerized environment?", "related_lectures": []}, {"_class": "assessment", "id": 73184274, "assessment_type": "multiple-choice", "prompt": {"question": "Orchestration tools help in managing the lifecycle of containers. Which of the following is not a typical feature of container orchestration?", "answers": ["Service Discovery", "Load Balancing", "Container Build", "Auto Scaling"], "explanation": "Container build is not a typical feature of container orchestration. Orchestration tools focus on deployment, scaling, and management of running containers, not on building container images."}, "correct_response": ["c"], "section": "Docker Orchestration", "question_plain": "Orchestration tools help in managing the lifecycle of containers. Which of the following is not a typical feature of container orchestration?", "related_lectures": []}, {"_class": "assessment", "id": 73184272, "assessment_type": "multiple-choice", "prompt": {"question": "Which Docker command is used to scale the number of containers in a service up or down?", "answers": ["docker resize", "docker scale", "docker deploy", "docker adjust"], "explanation": "The docker scale command is used to scale the number of containers in a service up or down, enabling the adjustment of the desired number of replicas."}, "correct_response": ["b"], "section": "Docker Commands", "question_plain": "Which Docker command is used to scale the number of containers in a service up or down?", "related_lectures": []}, {"_class": "assessment", "id": 73184270, "assessment_type": "multiple-choice", "prompt": {"question": "What is the primary role of an orchestration tool in a Docker environment?", "answers": ["Container Deployment", "Load Balancing", "Container Orchestration", "Image Building"], "explanation": "The primary role of an orchestration tool in a Docker environment is container orchestration. It helps manage the deployment, scaling, and operation of containerized applications."}, "correct_response": ["c"], "section": "Docker Orchestration", "question_plain": "What is the primary role of an orchestration tool in a Docker environment?", "related_lectures": []}, {"_class": "assessment", "id": 73184370, "assessment_type": "multiple-choice", "prompt": {"question": "Describe how you would configure a Docker environment to automatically deploy the latest image versions while ensuring that the deployment is secure and the images are free from known vulnerabilities.", "answers": ["Automated Scanning Tools", "Manual Image Inspection", "Docker Content Trust", "Private Docker Registry"], "explanation": "To automatically deploy the latest image versions securely, enabling Docker Content Trust is vital. This feature ensures that only signed and verified images are used, reducing the risk of deploying images with known vulnerabilities."}, "correct_response": ["c"], "section": "Docker Security and Automation", "question_plain": "Describe how you would configure a Docker environment to automatically deploy the latest image versions while ensuring that the deployment is secure and the images are free from known vulnerabilities.", "related_lectures": []}, {"_class": "assessment", "id": 73184368, "assessment_type": "multiple-choice", "prompt": {"question": "You&#x27;re tasked with setting up a secure orchestration for Docker containers that must comply with industry regulations. What Docker security practices would you implement to meet this demand?", "answers": ["Role-Based Access Control (RBAC)", "Docker Content Trust", "Insecure Registries", "Container Escapes Prevention"], "explanation": "To meet industry regulations, implementing Role-Based Access Control (RBAC) is crucial for secure orchestration. RBAC ensures that only authorized users have access to Docker resources, reducing the risk of unauthorized actions and improving overall security."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "You&#x27;re tasked with setting up a secure orchestration for Docker containers that must comply with industry regulations. What Docker security practices would you implement to meet this demand?", "related_lectures": []}, {"_class": "assessment", "id": 73184366, "assessment_type": "multiple-choice", "prompt": {"question": "A company wants to implement a continuous deployment pipeline that ensures zero downtime and provides quick rollbacks in case of failure. How can Docker&#x27;s features facilitate this requirement?", "answers": ["Blue-Green Deployments", "Docker Compose", "Docker Swarm", "Canary Deployments"], "explanation": "Docker facilitates zero downtime and quick rollbacks through features like Blue-Green Deployments. This approach involves running two identical production environments, with one serving live traffic while the other undergoes testing. Switching between them ensures seamless deployment and rollback capabilities."}, "correct_response": ["a"], "section": "Docker Deployment Strategies", "question_plain": "A company wants to implement a continuous deployment pipeline that ensures zero downtime and provides quick rollbacks in case of failure. How can Docker&#x27;s features facilitate this requirement?", "related_lectures": []}, {"_class": "assessment", "id": 73184364, "assessment_type": "multiple-choice", "prompt": {"question": "A secure orchestration workflow involves automatic updates to containers, which can be facilitated by _________ tools within Docker ecosystems.", "answers": ["Monitoring", "CI/CD", "Orchestration", "Containerization"], "explanation": "A secure orchestration workflow involves automatic updates to containers, which can be facilitated by orchestration tools within Docker ecosystems. Orchestration tools like Kubernetes or Docker Swarm help in automating the deployment and scaling of containerized applications."}, "correct_response": ["c"], "section": "Docker Orchestration", "question_plain": "A secure orchestration workflow involves automatic updates to containers, which can be facilitated by _________ tools within Docker ecosystems.", "related_lectures": []}, {"_class": "assessment", "id": 73184362, "assessment_type": "multiple-choice", "prompt": {"question": "The integration of Docker with _________ scanning tools helps in identifying vulnerabilities as part of a secure CI/CD pipeline.", "answers": ["Container Image", "Network", "Docker Security", "Container Runtime"], "explanation": "The integration of Docker with container image scanning tools helps in identifying vulnerabilities as part of a secure CI/CD pipeline. These tools analyze container images for security vulnerabilities before deployment."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "The integration of Docker with _________ scanning tools helps in identifying vulnerabilities as part of a secure CI/CD pipeline.", "related_lectures": []}, {"_class": "assessment", "id": 73184360, "assessment_type": "multiple-choice", "prompt": {"question": "To enforce network policies in Docker orchestration, administrators can use _________ to automatically apply rules.", "answers": ["Docker Compose", "Docker Swarm", "Docker Networking", "Docker Overlay"], "explanation": "To enforce network policies in Docker orchestration, administrators can use Docker Swarm to automatically apply rules. Docker Swarm provides built-in support for defining and enforcing network policies in a clustered environment."}, "correct_response": ["b"], "section": "Docker Orchestration", "question_plain": "To enforce network policies in Docker orchestration, administrators can use _________ to automatically apply rules.", "related_lectures": []}, {"_class": "assessment", "id": 73184358, "assessment_type": "multiple-choice", "prompt": {"question": "To ensure that only authorized images are run in your environment, Docker content trust uses _________ signing.", "answers": ["GPG", "SSL", "TLS", "HMAC"], "explanation": "Docker Content Trust uses GPG (GNU Privacy Guard) signing to ensure that only authorized and signed images are executed in your Docker environment. This adds an extra layer of security by verifying the authenticity of the images."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "To ensure that only authorized images are run in your environment, Docker content trust uses _________ signing.", "related_lectures": []}, {"_class": "assessment", "id": 73184356, "assessment_type": "multiple-choice", "prompt": {"question": "Docker _________ is a feature that allows you to automatically restart containers when they exit, ensuring high availability during deployments.", "answers": ["Autoheal", "Restart Policy", "Respawn", "Reloader"], "explanation": "Docker Restart Policy is a feature that allows you to automatically restart containers when they exit. This ensures high availability during deployments by quickly recovering from container failures."}, "correct_response": ["b"], "section": "Docker Features", "question_plain": "Docker _________ is a feature that allows you to automatically restart containers when they exit, ensuring high availability during deployments.", "related_lectures": []}, {"_class": "assessment", "id": 73184354, "assessment_type": "multiple-choice", "prompt": {"question": "Continuous deployment with Docker can be greatly streamlined using CI/CD pipelines, such as those provided by _________.", "answers": ["Jenkins", "GitLab", "Travis CI", "CircleCI"], "explanation": "Continuous deployment with Docker can be streamlined using CI/CD pipelines, such as those provided by GitLab. These pipelines automate the building, testing, and deployment of Dockerized applications."}, "correct_response": ["b"], "section": "CI/CD with Docker", "question_plain": "Continuous deployment with Docker can be greatly streamlined using CI/CD pipelines, such as those provided by _________.", "related_lectures": []}, {"_class": "assessment", "id": 73184352, "assessment_type": "multiple-choice", "prompt": {"question": "How can Docker&#x27;s API be used to integrate with third-party security tools and services during the orchestration of containers?", "answers": ["By enabling direct access to container file systems", "By allowing real-time monitoring of container logs", "By providing endpoints for container and image inspection", "By facilitating direct control over container networking"], "explanation": "Docker&#x27;s API can be used to integrate with third-party security tools by providing endpoints for container and image inspection. This allows external security tools to gather information and perform security checks during the orchestration of containers."}, "correct_response": ["c"], "section": "Docker API and Integration", "question_plain": "How can Docker&#x27;s API be used to integrate with third-party security tools and services during the orchestration of containers?", "related_lectures": []}, {"_class": "assessment", "id": 73184350, "assessment_type": "multiple-choice", "prompt": {"question": "Discuss the significance of Docker Content Trust in the context of a secure orchestration environment.", "answers": ["Ensures container immutability", "Provides image signing and verification", "Enables multi-container communication", "Implements role-based access control"], "explanation": "Docker Content Trust is significant for a secure orchestration environment as it provides image signing and verification. This ensures the integrity and authenticity of container images, mitigating the risk of deploying compromised or tampered images."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "Discuss the significance of Docker Content Trust in the context of a secure orchestration environment.", "related_lectures": []}, {"_class": "assessment", "id": 73184348, "assessment_type": "multiple-choice", "prompt": {"question": "How do blue-green deployment strategies benefit from Docker&#x27;s containerization in terms of minimizing downtime and risk?", "answers": ["By isolating environments", "By automating rollbacks", "By utilizing Docker Compose", "By leveraging container orchestration"], "explanation": "Blue-green deployment benefits from Docker&#x27;s containerization by isolating environments. This approach involves running two identical production environments, allowing seamless switching between them, minimizing downtime, and reducing the risk of deployment issues."}, "correct_response": ["a"], "section": "Docker Deployment Strategies", "question_plain": "How do blue-green deployment strategies benefit from Docker&#x27;s containerization in terms of minimizing downtime and risk?", "related_lectures": []}, {"_class": "assessment", "id": 73184346, "assessment_type": "multiple-choice", "prompt": {"question": "What is the role of a Docker Trusted Registry in a secure continuous deployment process?", "answers": ["Authenticating container images", "Storing and managing Docker images securely", "Managing container orchestration", "Securing container runtime"], "explanation": "A Docker Trusted Registry (DTR) plays a crucial role in a secure continuous deployment process by storing and managing Docker images securely. It provides authentication, access control, and image signing, ensuring the integrity and security of the container images throughout the deployment lifecycle."}, "correct_response": ["b"], "section": "Docker Trusted Registry (DTR)", "question_plain": "What is the role of a Docker Trusted Registry in a secure continuous deployment process?", "related_lectures": []}]};
+    var correct = 0;
+    var total = 0;
+    const questionData = quizData.questions
+    const passPercent = quizData.pass_percent
+    function kiemTraDapAn(correctMuti, choise) {
+      // Chuyển đổi các số trong choise thành chữ cái tương ứng
+      const choiseLetters = choise.map(num => String.fromCharCode(parseInt(num) + 'a'.charCodeAt(0)));
+      console.log('choiseLetters',choiseLetters)
+      // Kiểm tra điều kiện:
+      // 1. Chiều dài hai mảng phải bằng nhau
+      // 2. Tất cả các phần tử trong choiseLetters phải có trong correctMuti
+      if (
+        choiseLetters.length === correctMuti.length &&
+        choiseLetters.every(c => correctMuti.includes(c))
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    function main() {
+      total = questionData.length;
+
+      var questions = [];
+      for (var i = 0; i < questionData.length; i++) {
+        var question = questionData[i];
+        var questionText = question.prompt.question;
+        var answers = question.prompt.answers;
+        var correctAnswer = question.correct_response[0];
+        var correctMuti = question.correct_response;
+        var correctAnswerText = answers[correctAnswer.charCodeAt(0) - 97];
+        var questionObj = {
+          question: questionText,
+          correctAnswer: correctAnswerText,
+          answers: answers,
+          id: question.id,
+          explanation: question.prompt.explanation,
+          correctMuti
+
+        };
+        questions.push(questionObj);
+      }
+      console.log(questions.filter(i => i.correctMuti.length > 1))
+
+      updateScore();
+
+      // display the questions
+      var questionsContainer = document.getElementById("quiz-container");
+      for (var i = 0; i < questions.length; i++) {
+        var question = questions[i];
+        var questionElement = document.createElement("form");
+        questionElement.className = "question";
+        questionElement.innerHTML =
+          "<span>Question " +
+          (i + 1) +
+          ":</span>" +
+          '<div class="question-prompt">' +
+          question.question +
+          "</div>";
+        questionElement.id = question.id;
+        questionElement.classList.add("quiz-container");
+        var answersElement = document.createElement("ul");
+        answersElement.className = "answers";
+        console.log('question.correctMuti', question.correctMuti.length)
+        if (question.correctMuti.length > 1) {
+          for (var j = 0; j < question.answers.length; j++) {
+            var answer = question.answers[j];
+            var answerElement = document.createElement("li");
+            answerElement.className = "answer";
+            answerElement.innerHTML =
+              '<label for="input-' +
+              question.id +
+              "-" +
+              j +
+              '"><div onclick="select2(' +
+              question.id +
+              ", " +
+              j +
+              ')"><input id="input-' +
+              question.id +
+              "-" +
+              j +
+              '" type="checkbox" name="question' +
+              i +
+              '" value="' +
+              j +
+              '">' +
+              answer +
+              "</input></div></label>";
+            answerElement.classList.add("question-answer");
+            answersElement.appendChild(answerElement);
+          }
+        } else {
+          for (var j = 0; j < question.answers.length; j++) {
+            var answer = question.answers[j];
+            var answerElement = document.createElement("li");
+            answerElement.className = "answer";
+            answerElement.innerHTML =
+              '<label for="input-' +
+              question.id +
+              "-" +
+              j +
+              '"><div onclick="select(' +
+              question.id +
+              ", " +
+              j +
+              ')"><span></span><input id="input-' +
+              question.id +
+              "-" +
+              j +
+              '" type="radio" name="question' +
+              i +
+              '" value="' +
+              j +
+              '">' +
+              answer +
+              "</input></div></label>";
+            answerElement.classList.add("question-answer");
+            answersElement.appendChild(answerElement);
+          }
+        }
+        questionElement.appendChild(answersElement);
+
+        // add a submit button
+        var submitButton = document.createElement("button");
+        submitButton.className = "submit";
+        submitButton.innerHTML = "Submit";
+        submitButton.classList.add("submit-button");
+
+        submitButton.addEventListener("click", function (e) {
+          e.preventDefault();
+          var questionElement = e.target.parentElement;
+          var questionId = questionElement.id;
+          var question = questions.filter(function (q) {
+            return q.id == questionId;
+          })[0];
+
+          // set the border color of all answers to black
+          var answers = questionElement.getElementsByClassName("answer");
+          for (var i = 0; i < answers.length; i++) {
+            console.log(answers[i]);
+            answers[i].children[0].style.borderColor = "#1c1d1f";
+          }
+
+          var answer = questionElement.querySelector(
+            'input[type="radio"]:checked'
+          );
+          var mutilanswer = questionElement.querySelectorAll(
+            'input[type="checkbox"]:checked'
+          );
+          if (answer) {
+            var answerIndex = answer.value;
+            var answerText = question.answers[answerIndex];
+            if (answerText == question.correctAnswer) {
+              answer.parentElement.parentElement.style.borderColor =
+                "limegreen";
+              // alert("Correct!");
+              correct++;
+              updateScore();
+              questionElement.innerHTML += question.explanation
+
+            } else {
+              answer.parentElement.parentElement.style.borderColor = "red";
+              // alert("Incorrect!");
+            }
+          }
+          if (mutilanswer) {
+            var answerIndex = [...mutilanswer].map(a => a.value);
+
+            if (kiemTraDapAn(question.correctMuti, answerIndex)) {
+              [...mutilanswer].map(item => {
+                item.parentElement.parentElement.style.borderColor =
+                "limegreen";
+              })
+              // alert("Correct!");
+              correct++;
+              updateScore();
+              questionElement.innerHTML += question.explanation
+            } else {
+              [...mutilanswer].map(item => {
+                item.parentElement.parentElement.style.borderColor =
+                "red";
+              })
+            }
+            // var answerText = question.answers[answerIndex];
+            // if (answerText == question.correctAnswer) {
+            //   answer.parentElement.parentElement.style.borderColor =
+            //     "limegreen";
+            //   // alert("Correct!");
+            //   correct++;
+            //   updateScore();
+            //   questionElement.innerHTML += question.explanation
+
+            // } else {
+            //   answer.parentElement.parentElement.style.borderColor = "red";
+            //   // alert("Incorrect!");
+            // }
+          }
+          // else {
+          //   alert("Please select an answer.");
+          // }
+
+        });
+
+        // add button
+        questionElement.appendChild(submitButton);
+
+        questionsContainer.appendChild(questionElement);
+      }
+    }
+
+    function select(question, answer) {
+      var questionElement = document.getElementById(question);
+      var answers = questionElement.getElementsByClassName("answer");
+      for (var i = 0; i < answers.length; i++) {
+        var span = answers[i].children[0].children[0].children[0];
+        var input = answers[i].children[0].children[0].children[1];
+        span.classList.remove("selected");
+        input.checked = false;
+      }
+      var span = answers[answer].children[0].children[0].children[0];
+      var input = answers[answer].children[0].children[0].children[1];
+      span.classList.add("selected");
+      input.checked = true;
+    }
+    function select2(question, answer) {
+      var questionElement = document.getElementById(question);
+      var answers = questionElement.getElementsByClassName("answer");
+      // for (var i = 0; i < answers.length; i++) {
+      //   var span = answers[i].children[0].children[0].children[0];
+      //   var input = answers[i].children[0].children[0].children[1];
+      //   if(input.checked){
+      //     span.classList.remove("selected");
+      //     input.checked = false;
+      //   }
+
+      // }
+      // var span = answers[answer].children[0].children[0].children[0];
+      // var input = answers[answer].children[0].children[0].children[1];
+      // span.classList.add("selected");
+      // input.checked = true;
+    }
+    function updateScore() {
+      var scoreElem = document.getElementById("score");
+      const score = (correct / total) * 100;
+      scoreElem.innerHTML = "Score: " + score + "/" + passPercent + "%";
+    }
+  </script>
+</body>
+
+</html>
