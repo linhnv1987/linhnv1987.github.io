@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz</title>
+
+  <style>
+    body {
+      font-family: sf pro text, -apple-system, BlinkMacSystemFont, Roboto,
+        segoe ui, Helvetica, Arial, sans-serif, apple color emoji,
+        segoe ui emoji, segoe ui symbol;
+      font-weight: 400;
+      line-height: 22.4px;
+      font-size: 16px;
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    ul,
+    ol {
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      max-width: none;
+    }
+
+    code {
+      background-color: #fff;
+      border: 1px solid #d1d7dc;
+      color: #b4690e;
+      font-size: 90%;
+      padding: 0.2rem 0.4rem;
+    }
+
+    .quiz-content {
+      padding: 2.4rem;
+      word-break: break-word;
+      max-width: 86rem;
+      margin: 0 auto;
+    }
+
+    .quiz-container {
+      margin: 0 auto;
+      max-width: 84rem;
+      padding: 0;
+    }
+
+    .question {
+      margin-bottom: 5rem;
+    }
+
+    .question span {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .question-prompt {
+      margin-top: 0.8rem;
+      font-weight: 700;
+    }
+
+    .question-answer {
+      margin-top: 1.6rem;
+      padding-left: 0;
+      box-sizing: border-box;
+    }
+
+    .question-answer label {
+      max-width: 80rem;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      min-width: 18rem;
+      border: solid #1c1d1f 2px;
+    }
+
+    .question-answer div {
+      padding: 0.5rem;
+      width: 100%;
+    }
+
+    .question-answer div:hover {
+      background-color: #f5f5f5;
+    }
+
+    /* .question-answer input {
+      display: none;
+    } */
+
+    .question-answer span {
+      width: 1rem;
+      height: 1rem;
+      margin-right: 1.6rem;
+      top: 0;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+      border: 0.2rem solid #1c1d1f;
+      position: relative;
+    }
+
+    .selected {
+      background: #1c1d1f;
+      box-shadow: 0 0 0 0.4rem #fff inset;
+    }
+
+    .score {
+      position: fixed;
+      background-color: #b4690e;
+      padding: 10px;
+      color: white;
+    }
+  </style>
+</head>
+
+<body onload="main()">
+  <div id="score" class="score">
+    <span>Score: N/A of N/A</span>
+  </div>
+  <div id="quiz-container" class="quiz-content"></div>
+
+  <script>
+    const quizData = {"pass_percent": 50, "questions": [{"_class": "assessment", "id": 73184514, "assessment_type": "multiple-choice", "prompt": {"question": "Docker can be used to ensure consistent environments at different stages of CI/CD. Which Docker feature primarily enables this consistency?", "answers": ["Docker Compose", "Docker Registry", "Docker Images", "Dockerfile"], "explanation": "Docker Images primarily enable consistency in different stages of CI/CD. Images encapsulate the application and its dependencies, ensuring that the same environment is reproducible across various stages, from development to deployment."}, "correct_response": ["c"], "section": "Docker Images and Containers", "question_plain": "Docker can be used to ensure consistent environments at different stages of CI/CD. Which Docker feature primarily enables this consistency?", "related_lectures": []}, {"_class": "assessment", "id": 73184512, "assessment_type": "multiple-choice", "prompt": {"question": "What is the key benefit of integrating Docker into a Continuous Integration/Continuous Deployment (CI/CD) pipeline?", "answers": ["Efficient Resource Utilization", "Container Orchestration", "Consistent Environments", "Enhanced Security"], "explanation": "Integrating Docker into a CI/CD pipeline ensures consistent environments. This consistency helps in avoiding issues related to &quot;it works on my machine&quot; and ensures that the same environment is used throughout the development lifecycle, from development to production."}, "correct_response": ["c"], "section": "Docker in CI/CD", "question_plain": "What is the key benefit of integrating Docker into a Continuous Integration/Continuous Deployment (CI/CD) pipeline?", "related_lectures": []}, {"_class": "assessment", "id": 73184562, "assessment_type": "multiple-choice", "prompt": {"question": "Cloud providers often offer a managed ________ service, which can be used to store and run Docker containers in the cloud.", "answers": ["Registry", "Kubernetes", "Orchestration", "Repository"], "explanation": "Cloud providers often offer a managed Registry service, which serves as a centralized repository for Docker images. This allows users to store and manage their container images in the cloud."}, "correct_response": ["a"], "section": "Docker in the Cloud", "question_plain": "Cloud providers often offer a managed ________ service, which can be used to store and run Docker containers in the cloud.", "related_lectures": []}, {"_class": "assessment", "id": 73184560, "assessment_type": "multiple-choice", "prompt": {"question": "To create a minimal Docker image, often a ________ base image is used as the starting point.", "answers": ["Alpine", "Ubuntu", "CentOS", "Debian"], "explanation": "To create a minimal Docker image, an Alpine base image is often used. Alpine is known for its small size and minimalistic nature, making it a popular choice for lightweight containers."}, "correct_response": ["a"], "section": "Docker Image Creation", "question_plain": "To create a minimal Docker image, often a ________ base image is used as the starting point.", "related_lectures": []}, {"_class": "assessment", "id": 73184558, "assessment_type": "multiple-choice", "prompt": {"question": "Describe an approach for optimizing the transfer of Docker images across different cloud regions or availability zones.", "answers": ["Registry Mirroring", "Image Compression", "Cloud CDN Integration", "Container Orchestration"], "explanation": "Registry Mirroring involves replicating Docker images across multiple container registries, optimizing image transfer across different cloud regions or availability zones by providing local access to the images."}, "correct_response": ["a"], "section": "Docker Image Transfer Optimization", "question_plain": "Describe an approach for optimizing the transfer of Docker images across different cloud regions or availability zones.", "related_lectures": []}, {"_class": "assessment", "id": 73184556, "assessment_type": "multiple-choice", "prompt": {"question": "When integrating Docker with cloud-native CI/CD pipelines, what are the key considerations for image building and deployment?", "answers": ["Image Tagging Strategies", "Efficient Layering", "Security Scanning", "Resource Utilization"], "explanation": "Key considerations include efficient layering to optimize image caching, image tagging strategies for versioning, security scanning to identify vulnerabilities, and resource utilization for effective deployment in cloud-native environments."}, "correct_response": ["b"], "section": "Docker CI/CD Integration", "question_plain": "When integrating Docker with cloud-native CI/CD pipelines, what are the key considerations for image building and deployment?", "related_lectures": []}, {"_class": "assessment", "id": 73184554, "assessment_type": "multiple-choice", "prompt": {"question": "What advanced techniques can be used to further minimize the size of Docker images beyond just removing unnecessary files?", "answers": ["Multi-Stage Builds", "Image Layer Caching", "Binary Execution", "Dynamic Scaling"], "explanation": "Multi-Stage Builds is an advanced technique that involves using multiple FROM statements in a Dockerfile to create intermediate images, resulting in smaller final images by excluding unnecessary build artifacts."}, "correct_response": ["a"], "section": "Docker Image Optimization", "question_plain": "What advanced techniques can be used to further minimize the size of Docker images beyond just removing unnecessary files?", "related_lectures": []}, {"_class": "assessment", "id": 73184552, "assessment_type": "multiple-choice", "prompt": {"question": "Why is it important to minimize the number of layers in a Docker image during the build process?", "answers": ["Faster Build Times", "Easier Debugging", "Improved Version Control", "Enhanced Image Security"], "explanation": "Minimizing the number of layers in a Docker image accelerates the build process. Each layer adds overhead, and reducing them enhances build efficiency. This results in faster image creation, deployment, and better overall development workflows."}, "correct_response": ["a"], "section": "Docker Image Optimization", "question_plain": "Why is it important to minimize the number of layers in a Docker image during the build process?", "related_lectures": []}, {"_class": "assessment", "id": 73184550, "assessment_type": "multiple-choice", "prompt": {"question": "How does using Docker in cloud environments differ from using it on-premises in terms of image storage?", "answers": ["Cloud provides scalable storage", "On-premises relies on local storage", "Cloud storage is more expensive", "On-premises storage is more secure"], "explanation": "In cloud environments, Docker leverages scalable storage solutions, allowing for flexibility and easy scaling of applications. On-premises, however, relies on local storage, which may have limitations in scalability compared to cloud-based solutions."}, "correct_response": ["a"], "section": "Docker in Cloud Environments", "question_plain": "How does using Docker in cloud environments differ from using it on-premises in terms of image storage?", "related_lectures": []}, {"_class": "assessment", "id": 73184548, "assessment_type": "multiple-choice", "prompt": {"question": "What is the main purpose of building minimal Docker images for applications?", "answers": ["Faster Deployment", "Enhanced Security", "Reduced Resource Consumption", "Improved Network Performance"], "explanation": "Building minimal Docker images is essential to reduce resource consumption. Smaller images mean less disk space usage, faster download times, and lower resource requirements during deployment. This efficiency is crucial for optimized containerized applications."}, "correct_response": ["c"], "section": "Docker Image Optimization", "question_plain": "What is the main purpose of building minimal Docker images for applications?", "related_lectures": []}, {"_class": "assessment", "id": 73184546, "assessment_type": "multiple-choice", "prompt": {"question": "During the CD process, you need to ensure zero downtime deployments. How can Docker help achieve this, and what specific features would you leverage?", "answers": ["Use Docker Compose", "Utilize Docker Healthchecks", "Implement Blue-Green Deployments", "Enable Docker Swarm"], "explanation": "Achieving zero downtime deployments can be done through implementing Blue-Green Deployments. This strategy involves running two identical environments, allowing for seamless transitions between the active and inactive versions, minimizing downtime. Docker Compose and Swarm can support such deployment strategies."}, "correct_response": ["c"], "section": "Docker Deployment Strategies", "question_plain": "During the CD process, you need to ensure zero downtime deployments. How can Docker help achieve this, and what specific features would you leverage?", "related_lectures": []}, {"_class": "assessment", "id": 73184544, "assessment_type": "multiple-choice", "prompt": {"question": "How would you utilize Docker&#x27;s API to automate the deployment of a new containerized service as part of a CI/CD process?", "answers": ["Use the /containers/create endpoint", "Use the /services/deploy endpoint", "Use the /images/push endpoint", "Use the /networks/connect endpoint"], "explanation": "To automate the deployment of a new containerized service, you would utilize Docker&#x27;s API with the /services/deploy endpoint. This endpoint allows for the creation and deployment of services, making it a key component in automating CI/CD processes."}, "correct_response": ["b"], "section": "Docker API Automation", "question_plain": "How would you utilize Docker&#x27;s API to automate the deployment of a new containerized service as part of a CI/CD process?", "related_lectures": []}, {"_class": "assessment", "id": 73184542, "assessment_type": "multiple-choice", "prompt": {"question": "A software team wants to reduce the build time of their Dockerized applications in their CI/CD pipeline. What Docker features or best practices would you recommend they implement?", "answers": ["Multi-stage builds", "Docker Compose", "Docker Swarm", "Docker Secrets"], "explanation": "To reduce build time, utilizing multi-stage builds is recommended. Multi-stage builds allow for the creation of smaller and optimized Docker images by separating the build environment from the runtime environment. This results in faster and more efficient builds in a CI/CD pipeline."}, "correct_response": ["a"], "section": "Docker Build Optimization", "question_plain": "A software team wants to reduce the build time of their Dockerized applications in their CI/CD pipeline. What Docker features or best practices would you recommend they implement?", "related_lectures": []}, {"_class": "assessment", "id": 73184540, "assessment_type": "multiple-choice", "prompt": {"question": "Advanced CI/CD workflows may use the Docker _______ to monitor the health and status of a containerized application post-deployment.", "answers": ["Observer", "Inspector", "Supervisor", "Healthcheck"], "explanation": "Advanced CI/CD workflows may use the Docker Healthcheck to monitor the health and status of a containerized application post-deployment. Healthchecks provide insights into the container&#x27;s health, aiding in automated decision-making in the CI/CD pipeline."}, "correct_response": ["d"], "section": "Docker CI/CD", "question_plain": "Advanced CI/CD workflows may use the Docker _______ to monitor the health and status of a containerized application post-deployment.", "related_lectures": []}, {"_class": "assessment", "id": 73184536, "assessment_type": "multiple-choice", "prompt": {"question": "To optimize build times in a CI/CD pipeline, Docker images should be composed using _______ layers to cache dependencies.", "answers": ["Smaller", "Thinner", "Thicker", "Multi-stage"], "explanation": "To optimize build times in a CI/CD pipeline, Docker images should be composed using multi-stage layers to cache dependencies. Multi-stage builds help reduce the final image size by eliminating unnecessary dependencies in the production image."}, "correct_response": ["d"], "section": "Docker CI/CD", "question_plain": "To optimize build times in a CI/CD pipeline, Docker images should be composed using _______ layers to cache dependencies.", "related_lectures": []}, {"_class": "assessment", "id": 73184538, "assessment_type": "multiple-choice", "prompt": {"question": "The process of automatically deploying containers to a production environment upon successful test runs in CI/CD is known as _______ deployment.", "answers": ["Blue-Green", "Canary", "Rolling", "A/B"], "explanation": "The process of automatically deploying containers to a production environment upon successful test runs in CI/CD is known as Canary deployment. Canary deployment allows for gradual release and testing of new versions to a subset of users before a full rollout."}, "correct_response": ["b"], "section": "Docker CI/CD", "question_plain": "The process of automatically deploying containers to a production environment upon successful test runs in CI/CD is known as _______ deployment.", "related_lectures": []}, {"_class": "assessment", "id": 73184516, "assessment_type": "multiple-choice", "prompt": {"question": "What type of tests are typically run within Docker containers during a CI/CD pipeline to ensure software quality?", "answers": ["Unit Tests", "Integration Tests", "End-to-End Tests", "All of the Above"], "explanation": "Typically, all types of tests, including Unit Tests, Integration Tests, and End-to-End Tests, are run within Docker containers during a CI/CD pipeline. Docker provides an isolated environment for testing, ensuring that the software behaves consistently across different testing scenarios."}, "correct_response": ["d"], "section": "Docker in Testing", "question_plain": "What type of tests are typically run within Docker containers during a CI/CD pipeline to ensure software quality?", "related_lectures": []}, {"_class": "assessment", "id": 73184518, "assessment_type": "multiple-choice", "prompt": {"question": "When using Docker&#x27;s API in a CI/CD pipeline, what is the primary action that can be automated for container management?", "answers": ["Container Deployment", "Image Building", "Networking Configuration", "Volume Mounting"], "explanation": "In a CI/CD pipeline using Docker&#x27;s API, the primary action that can be automated is Image Building. The API allows for programmatic creation and management of Docker images, facilitating seamless integration into continuous integration workflows."}, "correct_response": ["b"], "section": "Docker API and CI/CD", "question_plain": "When using Docker&#x27;s API in a CI/CD pipeline, what is the primary action that can be automated for container management?", "related_lectures": []}, {"_class": "assessment", "id": 73184520, "assessment_type": "multiple-choice", "prompt": {"question": "How does Docker&#x27;s API facilitate the integration with third-party CI/CD tools like Jenkins or GitLab CI?", "answers": ["It exposes RESTful endpoints", "It provides direct integration plugins", "It uses WebSocket for real-time communication", "It relies on custom protocols"], "explanation": "Docker&#x27;s API facilitates integration by exposing RESTful endpoints. This allows third-party CI/CD tools like Jenkins or GitLab CI to interact with Docker, enabling automation of container-related tasks in the software delivery process."}, "correct_response": ["a"], "section": "Docker API and CI/CD Integration", "question_plain": "How does Docker&#x27;s API facilitate the integration with third-party CI/CD tools like Jenkins or GitLab CI?", "related_lectures": []}, {"_class": "assessment", "id": 73184522, "assessment_type": "multiple-choice", "prompt": {"question": "What are the advantages of using Docker SDKs over the CLI in a programmatic environment such as a CI/CD workflow?", "answers": ["Better User Interface", "Improved Security", "Easier Learning Curve", "Programmatic Control and Automation"], "explanation": "Docker SDKs offer programmatic control and automation, making them advantageous over the CLI in a programmatic environment like a CI/CD workflow. SDKs provide a more flexible and extensible way to interact with Docker, enabling seamless integration into automated workflows."}, "correct_response": ["d"], "section": "Docker SDKs and CI/CD", "question_plain": "What are the advantages of using Docker SDKs over the CLI in a programmatic environment such as a CI/CD workflow?", "related_lectures": []}, {"_class": "assessment", "id": 73184524, "assessment_type": "multiple-choice", "prompt": {"question": "How does the immutability of Docker containers benefit the CI/CD process in terms of reliability and troubleshooting?", "answers": ["Simplifies Rollbacks", "Eases Debugging", "Reduces Configuration Drift", "Enhances Performance"], "explanation": "The immutability of Docker containers simplifies rollbacks in the CI/CD process. Once an image is created, it remains unchanged throughout its lifecycle, reducing the risk of configuration errors and ensuring reliable deployments."}, "correct_response": ["a"], "section": "CI/CD with Docker", "question_plain": "How does the immutability of Docker containers benefit the CI/CD process in terms of reliability and troubleshooting?", "related_lectures": []}, {"_class": "assessment", "id": 73184526, "assessment_type": "multiple-choice", "prompt": {"question": "Describe how Docker&#x27;s API can be used to dynamically scale containers in response to changing load during the deployment phase of CI/CD.", "answers": ["Utilize Swarm Mode", "Leverage Kubernetes", "Integrate with Jenkins", "Interact with Docker Remote API"], "explanation": "Docker&#x27;s API can be used to dynamically scale containers by interacting with Docker Remote API. This allows for programmatic control, enabling automated scaling based on load conditions during CI/CD deployment."}, "correct_response": ["d"], "section": "CI/CD with Docker", "question_plain": "Describe how Docker&#x27;s API can be used to dynamically scale containers in response to changing load during the deployment phase of CI/CD.", "related_lectures": []}, {"_class": "assessment", "id": 73184528, "assessment_type": "multiple-choice", "prompt": {"question": "What are some considerations for managing data persistence when deploying stateful applications via Docker in a CI/CD pipeline?", "answers": ["Use Docker Volumes", "Employ Docker Compose", "Rely on Environment Variables", "Utilize Docker Secrets"], "explanation": "When deploying stateful applications in a CI/CD pipeline, managing data persistence involves using Docker Volumes. Volumes allow data to persist beyond the container&#x27;s lifecycle, ensuring stateful applications maintain their data integrity."}, "correct_response": ["a"], "section": "Data Persistence in Docker CI/CD", "question_plain": "What are some considerations for managing data persistence when deploying stateful applications via Docker in a CI/CD pipeline?", "related_lectures": []}, {"_class": "assessment", "id": 73184530, "assessment_type": "multiple-choice", "prompt": {"question": "The Docker _______ API endpoint can be used to create a new image as part of a CI/CD build step.", "answers": ["Build", "Image", "Registry", "Deploy"], "explanation": "The Docker Build API endpoint is used to create a new image as part of a CI/CD build step. It allows developers to automate the process of building Docker images from source code."}, "correct_response": ["a"], "section": "Docker Build Process", "question_plain": "The Docker _______ API endpoint can be used to create a new image as part of a CI/CD build step.", "related_lectures": []}, {"_class": "assessment", "id": 73184532, "assessment_type": "multiple-choice", "prompt": {"question": "Integrating Docker with a CI/CD pipeline can be done using webhooks, which are HTTP _______ requests triggered by events.", "answers": ["POST", "GET", "PUT", "DELETE"], "explanation": "Integrating Docker with a CI/CD pipeline can be done using webhooks, which are HTTP POST requests triggered by events. These events could include code commits or other actions that should trigger a build and deployment process."}, "correct_response": ["a"], "section": "CI/CD and Docker Integration", "question_plain": "Integrating Docker with a CI/CD pipeline can be done using webhooks, which are HTTP _______ requests triggered by events.", "related_lectures": []}, {"_class": "assessment", "id": 73184534, "assessment_type": "multiple-choice", "prompt": {"question": "Docker SDKs available for programming languages like Python and Go are used to interact with the Docker daemon via the Docker _______.", "answers": ["CLI", "API", "Engine", "Container"], "explanation": "Docker SDKs available for programming languages like Python and Go are used to interact with the Docker daemon via the Docker API. This allows developers to programmatically manage Docker containers and services."}, "correct_response": ["b"], "section": "Docker SDKs and APIs", "question_plain": "Docker SDKs available for programming languages like Python and Go are used to interact with the Docker daemon via the Docker _______.", "related_lectures": []}, {"_class": "assessment", "id": 73184610, "assessment_type": "multiple-choice", "prompt": {"question": "A developer is tasked with ensuring that their Docker containers are optimized for both ARM and x86 architectures. What Docker features should they leverage?", "answers": ["Docker Manifest", "Multi-Stage Builds", "Docker Compose", "Dockerfile FROM Directive"], "explanation": "To optimize Docker containers for both ARM and x86 architectures, the developer should leverage Docker Manifest, which allows building and pushing multi-arch images. This ensures compatibility with different processor architectures."}, "correct_response": ["a"], "section": "Docker Build and Optimization", "question_plain": "A developer is tasked with ensuring that their Docker containers are optimized for both ARM and x86 architectures. What Docker features should they leverage?", "related_lectures": []}, {"_class": "assessment", "id": 73184612, "assessment_type": "multiple-choice", "prompt": {"question": "When integrating a Dockerized application with a cloud-based persistent storage service, which plugin architecture considerations are critical for seamless functionality?", "answers": ["Docker Volume Plugins", "Docker Networking Plugins", "Docker Security Plugins", "Docker Logging Plugins"], "explanation": "Critical for seamless integration with a cloud-based storage service, Docker Volume Plugins enable managing persistent storage for containers. These plugins facilitate communication between Docker and the external storage, ensuring reliable and scalable data storage for Dockerized applications in the cloud."}, "correct_response": ["a"], "section": "Docker Volumes and Plugins", "question_plain": "When integrating a Dockerized application with a cloud-based persistent storage service, which plugin architecture considerations are critical for seamless functionality?", "related_lectures": []}, {"_class": "assessment", "id": 73184614, "assessment_type": "multiple-choice", "prompt": {"question": "What Docker feature is particularly useful for managing the different services in a microservices architecture?", "answers": ["Docker Swarm", "Docker Compose", "Docker Hub", "Docker Registry"], "explanation": "Docker Compose is particularly useful for managing different services in a microservices architecture. It allows you to define and run multi-container Docker applications using a YAML file to configure the services, networks, and volumes."}, "correct_response": ["b"], "section": "Docker Orchestration", "question_plain": "What Docker feature is particularly useful for managing the different services in a microservices architecture?", "related_lectures": []}, {"_class": "assessment", "id": 73184616, "assessment_type": "multiple-choice", "prompt": {"question": "When a Docker container fails to start, which Docker command can be used to retrieve the logs to understand the issue?", "answers": ["docker ps", "docker inspect", "docker logs", "docker events"], "explanation": "To retrieve logs and understand the issue when a Docker container fails to start, use the &#x27;docker logs&#x27; command. This provides insights into the container&#x27;s output, helping diagnose and troubleshoot the problem."}, "correct_response": ["c"], "section": "Docker Troubleshooting", "question_plain": "When a Docker container fails to start, which Docker command can be used to retrieve the logs to understand the issue?", "related_lectures": []}, {"_class": "assessment", "id": 73184618, "assessment_type": "multiple-choice", "prompt": {"question": "In the context of microservices, what Docker command can help link containers to allow them to communicate with each other?", "answers": ["docker connect", "docker link", "docker network", "docker attach"], "explanation": "In the context of microservices, the &#x27;docker network&#x27; command can be used to link containers and allow them to communicate with each other. It helps in creating isolated networks for different microservices."}, "correct_response": ["c"], "section": "Docker Networking", "question_plain": "In the context of microservices, what Docker command can help link containers to allow them to communicate with each other?", "related_lectures": []}, {"_class": "assessment", "id": 73184620, "assessment_type": "multiple-choice", "prompt": {"question": "How does Docker Compose assist in the deployment of microservices architecture?", "answers": ["Orchestrating Containers", "Managing Network Security", "Load Balancing", "Monitoring Memory Usage"], "explanation": "Docker Compose assists in deploying microservices by orchestrating containers. It allows you to define and manage multi-container applications, specifying their services, networks, and dependencies in a single file. This simplifies the deployment and scaling of microservices."}, "correct_response": ["a"], "section": "Docker Compose and Orchestration", "question_plain": "How does Docker Compose assist in the deployment of microservices architecture?", "related_lectures": []}, {"_class": "assessment", "id": 73184622, "assessment_type": "multiple-choice", "prompt": {"question": "What Docker subcommand can be used to monitor the real-time events happening in containers for debugging purposes?", "answers": ["docker stats", "docker events", "docker logs", "docker inspect"], "explanation": "The docker events subcommand can be used to monitor real-time events happening in containers. It provides information about container lifecycle events, helping in debugging and understanding container behavior."}, "correct_response": ["b"], "section": "Docker Commands and Operations", "question_plain": "What Docker subcommand can be used to monitor the real-time events happening in containers for debugging purposes?", "related_lectures": []}, {"_class": "assessment", "id": 73184624, "assessment_type": "multiple-choice", "prompt": {"question": "What is the first step you should take when a container is running but not responding to network requests?", "answers": ["Check Container Logs", "Restart the Container", "Inspect Container Configuration", "Scale the Container"], "explanation": "The first step when a container is not responding to network requests is to check the container logs. Logs often contain information about errors or issues that can help diagnose and troubleshoot the problem."}, "correct_response": ["a"], "section": "Troubleshooting Docker Containers", "question_plain": "What is the first step you should take when a container is running but not responding to network requests?", "related_lectures": []}, {"_class": "assessment", "id": 73184626, "assessment_type": "multiple-choice", "prompt": {"question": "n a microservices architecture, how can Docker&#x27;s service discovery features be leveraged to dynamically manage inter-service communication?", "answers": ["DNS-based Service Discovery", "Docker Compose", "Load Balancing", "Reverse Proxy"], "explanation": "Docker&#x27;s service discovery features, like DNS-based discovery, enable microservices to locate and communicate with each other dynamically. By resolving service names through DNS, containers can discover the IP addresses of other services, facilitating seamless communication in a dynamic environment."}, "correct_response": ["a"], "section": "Docker Networking", "question_plain": "n a microservices architecture, how can Docker&#x27;s service discovery features be leveraged to dynamically manage inter-service communication?", "related_lectures": []}, {"_class": "assessment", "id": 73184628, "assessment_type": "multiple-choice", "prompt": {"question": "What advanced Docker command or feature can be used to attach a debugger to a running container for real-time troubleshooting?", "answers": ["docker attach", "docker exec", "docker debug", "Docker Remote API"], "explanation": "The docker exec command is used for attaching a debugger to a running container. This feature allows real-time troubleshooting by providing an interactive shell within the container, enabling diagnostic actions such as debugging and inspecting running processes."}, "correct_response": ["b"], "section": "Docker Advanced Commands", "question_plain": "What advanced Docker command or feature can be used to attach a debugger to a running container for real-time troubleshooting?", "related_lectures": []}, {"_class": "assessment", "id": 73184630, "assessment_type": "multiple-choice", "prompt": {"question": "Describe how Docker&#x27;s health check instructions in a Dockerfile can aid in maintaining the reliability of services in a microservices architecture.", "answers": ["Improved Resource Utilization", "Automatic Container Restart", "Dynamic Load Balancing", "Efficient Scaling"], "explanation": "Docker&#x27;s health check instructions in a Dockerfile enhance service reliability by enabling automatic container restart. If a container&#x27;s health check fails, Docker can take predefined actions like restarting the container, contributing to the overall resilience of microservices in a dynamic environment."}, "correct_response": ["b"], "section": "Docker Health Checks", "question_plain": "Describe how Docker&#x27;s health check instructions in a Dockerfile can aid in maintaining the reliability of services in a microservices architecture.", "related_lectures": []}, {"_class": "assessment", "id": 73184632, "assessment_type": "multiple-choice", "prompt": {"question": "To troubleshoot issues within a Docker container, you can start a shell session inside the container using the command docker exec -it &lt;container_id&gt; _______.", "answers": ["/bin/bash", "/sh", "/cmd", "/shell"], "explanation": "To troubleshoot issues, you can start a shell session with /bin/bash inside the container using the docker exec command. This allows you to interact with the container&#x27;s file system and processes."}, "correct_response": ["a"], "section": "Docker Troubleshooting", "question_plain": "To troubleshoot issues within a Docker container, you can start a shell session inside the container using the command docker exec -it &lt;container_id&gt; _______.", "related_lectures": []}, {"_class": "assessment", "id": 73184634, "assessment_type": "multiple-choice", "prompt": {"question": "For defining multi-container applications with Docker, a YAML file named docker-compose._______ is used.", "answers": ["yml", "xml", "cfg", "json"], "explanation": "For defining multi-container applications, a YAML file named docker-compose.yml is used. It contains configuration details for multiple services, allowing for easy deployment and management of complex applications."}, "correct_response": ["a"], "section": "Docker Compose", "question_plain": "For defining multi-container applications with Docker, a YAML file named docker-compose._______ is used.", "related_lectures": []}, {"_class": "assessment", "id": 73184636, "assessment_type": "multiple-choice", "prompt": {"question": "When debugging network connectivity issues between Docker containers, the docker _______ inspect &lt;container_id&gt; command can be useful to examine the container&#x27;s network settings.", "answers": ["network", "net", "container", "inspect"], "explanation": "When debugging network issues, the docker inspect &lt;container_id&gt; command is useful. It provides detailed information about the container, including its network settings, helping identify and resolve connectivity problems."}, "correct_response": ["d"], "section": "Docker Networking", "question_plain": "When debugging network connectivity issues between Docker containers, the docker _______ inspect &lt;container_id&gt; command can be useful to examine the container&#x27;s network settings.", "related_lectures": []}, {"_class": "assessment", "id": 73184638, "assessment_type": "multiple-choice", "prompt": {"question": "hen a container&#x27;s process is unresponsive, you can use the docker container _______ command to force a restart.", "answers": ["restart", "recover", "revive", "renew"], "explanation": "When a container&#x27;s process is unresponsive, the correct command to force a restart is docker container restart. This command stops and then starts the container, attempting to recover it from the unresponsive state."}, "correct_response": ["a"], "section": "Docker Container Management", "question_plain": "hen a container&#x27;s process is unresponsive, you can use the docker container _______ command to force a restart.", "related_lectures": []}, {"_class": "assessment", "id": 73184640, "assessment_type": "multiple-choice", "prompt": {"question": "In Docker Swarm, a rolling update to services without downtime is achieved by specifying the --update-parallelism flag in the docker service _______ command.", "answers": ["update", "roll", "deploy", "configure"], "explanation": "In Docker Swarm, a rolling update without downtime is achieved by using the docker service update command. By specifying the --update-parallelism flag, you can control the number of service tasks updated in parallel, ensuring a smooth update process."}, "correct_response": ["c"], "section": "Docker Swarm", "question_plain": "In Docker Swarm, a rolling update to services without downtime is achieved by specifying the --update-parallelism flag in the docker service _______ command.", "related_lectures": []}, {"_class": "assessment", "id": 73184642, "assessment_type": "multiple-choice", "prompt": {"question": "The command to check the detailed health status of a Docker service in a Swarm is docker service _______.", "answers": ["status", "inspect", "health", "report"], "explanation": "To check the detailed health status of a Docker service in a Swarm, use the docker service inspect command. This command provides comprehensive information about the service, including its health status and configurations."}, "correct_response": ["b"], "section": "Docker Swarm", "question_plain": "The command to check the detailed health status of a Docker service in a Swarm is docker service _______.", "related_lectures": []}, {"_class": "assessment", "id": 73184644, "assessment_type": "multiple-choice", "prompt": {"question": "A microservices application is experiencing intermittent failures. How can Docker help in identifying and isolating the service causing the issue?", "answers": ["Docker Logs", "Docker Events", "Docker Swarm", "Docker Health Checks"], "explanation": "Docker Health Checks allow you to monitor the health of individual services within a containerized application. By implementing health checks, you can identify and isolate the specific service causing the intermittent failures, enabling timely troubleshooting and resolution."}, "correct_response": ["d"], "section": "Docker Troubleshooting", "question_plain": "A microservices application is experiencing intermittent failures. How can Docker help in identifying and isolating the service causing the issue?", "related_lectures": []}, {"_class": "assessment", "id": 73184646, "assessment_type": "multiple-choice", "prompt": {"question": "During peak load, one of your microservices becomes unresponsive. Describe how Docker&#x27;s tools and features can help in quickly restoring service availability.", "answers": ["Docker Compose Scaling", "Docker Swarm Scaling", "Load Balancing", "Docker Auto Scaling"], "explanation": "Docker&#x27;s load balancing features, combined with tools like Docker Swarm, enable efficient distribution of incoming requests across multiple instances of the unresponsive microservice. This helps in restoring service availability by preventing overloading on a single instance during peak load."}, "correct_response": ["c"], "section": "Docker Scaling and Load Balancing", "question_plain": "During peak load, one of your microservices becomes unresponsive. Describe how Docker&#x27;s tools and features can help in quickly restoring service availability.", "related_lectures": []}, {"_class": "assessment", "id": 73184648, "assessment_type": "multiple-choice", "prompt": {"question": "You need to deploy an update to a containerized service with zero downtime. What Docker strategies would you implement to ensure a smooth transition?", "answers": ["Blue-Green Deployment", "Canary Deployment", "Rolling Deployment", "Recreate Deployment"], "explanation": "Rolling Deployment in Docker involves gradually updating containers in a service one at a time, ensuring that the service remains available throughout the deployment process. This strategy minimizes downtime by seamlessly transitioning from the old version to the new version."}, "correct_response": ["c"], "section": "Docker Deployment Strategies", "question_plain": "You need to deploy an update to a containerized service with zero downtime. What Docker strategies would you implement to ensure a smooth transition?", "related_lectures": []}, {"_class": "assessment", "id": 73184650, "assessment_type": "multiple-choice", "prompt": {"question": "What is the primary purpose of using TLS (Transport Layer Security) in Docker daemon socket communications?", "answers": ["Secure File Storage", "Secure Communication", "Container Orchestration", "Resource Allocation"], "explanation": "The primary purpose of using TLS in Docker daemon socket communications is to ensure secure communication. TLS encrypts the communication between Docker clients and the daemon, protecting against unauthorized access and data interception."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "What is the primary purpose of using TLS (Transport Layer Security) in Docker daemon socket communications?", "related_lectures": []}, {"_class": "assessment", "id": 73184652, "assessment_type": "multiple-choice", "prompt": {"question": "Docker Bench for Security is a tool that checks for dozens of common best-practices around deploying Docker containers in production. What aspect of Docker does it primarily assess?", "answers": ["Container Performance", "Container Networking", "Container Security", "Container Orchestration"], "explanation": "Docker Bench for Security primarily assesses container security. It checks for best practices to ensure that Docker containers are deployed securely in a production environment, addressing potential vulnerabilities and misconfigurations."}, "correct_response": ["c"], "section": "Docker Security", "question_plain": "Docker Bench for Security is a tool that checks for dozens of common best-practices around deploying Docker containers in production. What aspect of Docker does it primarily assess?", "related_lectures": []}, {"_class": "assessment", "id": 73184654, "assessment_type": "multiple-choice", "prompt": {"question": "By default, how are Docker networks isolated from each other to provide network security?", "answers": ["Using VLANs (Virtual LANs)", "Through IP Whitelisting", "By creating separate subnets", "Using Linux Kernel Features"], "explanation": "By default, Docker networks are isolated from each other using Linux Kernel features. Docker leverages namespaces and other kernel capabilities to provide network isolation, preventing communication between containers on different networks."}, "correct_response": ["d"], "section": "Docker Networking", "question_plain": "By default, how are Docker networks isolated from each other to provide network security?", "related_lectures": []}, {"_class": "assessment", "id": 73184586, "assessment_type": "multiple-choice", "prompt": {"question": "What feature of Docker allows developers to package an application with all of its dependencies into a standardized unit for software development?", "answers": ["Docker Compose", "Dockerfile", "Docker Image", "Docker Registry"], "explanation": "Docker Image is the feature that allows developers to package an application with all of its dependencies into a standardized unit. It includes the application code, runtime, libraries, and system tools needed to run the application."}, "correct_response": ["c"], "section": "Docker Images", "question_plain": "What feature of Docker allows developers to package an application with all of its dependencies into a standardized unit for software development?", "related_lectures": []}, {"_class": "assessment", "id": 73184564, "assessment_type": "multiple-choice", "prompt": {"question": "The Docker ________ command can be used to strip unnecessary files from an image to make it minimal.", "answers": ["Prune", "Optimize", "Minimize", "Slim"], "explanation": "The Docker Prune command can be used to strip unnecessary files and resources from an image, helping to reduce its size and make it more minimal. This is essential for optimizing image distribution and deployment."}, "correct_response": ["a"], "section": "Docker Image Optimization", "question_plain": "The Docker ________ command can be used to strip unnecessary files from an image to make it minimal.", "related_lectures": []}, {"_class": "assessment", "id": 73184566, "assessment_type": "multiple-choice", "prompt": {"question": "Docker images can be optimized for the cloud by using multi-stage builds, which is specified using the ________ instruction in a Dockerfile.", "answers": ["MULTISTAGE", "CLOUDOPT", "STAGE", "OPTIMIZE"], "explanation": "Docker images can be optimized for the cloud using multi-stage builds, specified by the &quot;MULTISTAGE&quot; instruction in a Dockerfile. This allows developers to create efficient images by separating the build environment from the runtime environment."}, "correct_response": ["a"], "section": "Docker Optimization", "question_plain": "Docker images can be optimized for the cloud by using multi-stage builds, which is specified using the ________ instruction in a Dockerfile.", "related_lectures": []}, {"_class": "assessment", "id": 73184568, "assessment_type": "multiple-choice", "prompt": {"question": "When optimizing for cloud deployments, Docker images can be scanned for vulnerabilities using automated ________ tools.", "answers": ["SECURESCAN", "VULNDETECT", "SECURITY", "SCANNING"], "explanation": "When optimizing for cloud deployments, Docker images can be scanned for vulnerabilities using automated &quot;SCANNING&quot; tools. These tools analyze the image for potential security risks, helping to ensure a secure deployment."}, "correct_response": ["d"], "section": "Docker Security", "question_plain": "When optimizing for cloud deployments, Docker images can be scanned for vulnerabilities using automated ________ tools.", "related_lectures": []}, {"_class": "assessment", "id": 73184570, "assessment_type": "multiple-choice", "prompt": {"question": "In cloud environments, Docker images should be tagged with specific versions using the Docker ________ command to maintain version control.", "answers": ["VERSION", "TAG", "RELEASE", "CONTROL"], "explanation": "In cloud environments, Docker images should be tagged with specific versions using the Docker &quot;TAG&quot; command. This practice helps in maintaining version control, making it easier to manage and deploy specific versions of the application."}, "correct_response": ["b"], "section": "Docker Versioning", "question_plain": "In cloud environments, Docker images should be tagged with specific versions using the Docker ________ command to maintain version control.", "related_lectures": []}, {"_class": "assessment", "id": 73184572, "assessment_type": "multiple-choice", "prompt": {"question": "You are tasked with reducing the deployment time of Docker containers in a global cloud environment. How would you leverage cloud services to achieve this?", "answers": ["Utilize container orchestration tools", "Implement a multi-region deployment strategy", "Optimize Docker image layers", "Utilize a content delivery network (CDN)"], "explanation": "To reduce deployment time in a global cloud environment, leveraging container orchestration tools like Kubernetes can help automate and streamline deployment processes across regions."}, "correct_response": ["a"], "section": "Docker Orchestration", "question_plain": "You are tasked with reducing the deployment time of Docker containers in a global cloud environment. How would you leverage cloud services to achieve this?", "related_lectures": []}, {"_class": "assessment", "id": 73184574, "assessment_type": "multiple-choice", "prompt": {"question": "A company&#x27;s Docker images are becoming bloated, leading to increased costs and slower deployment times in their cloud environment. What steps would you take to address this issue?", "answers": ["Implement a microservices architecture", "Utilize multi-stage builds in Dockerfiles", "Regularly prune unused images and containers", "Implement container image vulnerability scanning"], "explanation": "To address bloated Docker images, using multi-stage builds in Dockerfiles can help create smaller and more efficient images, reducing costs and improving deployment times."}, "correct_response": ["b"], "section": "Docker Image Optimization", "question_plain": "A company&#x27;s Docker images are becoming bloated, leading to increased costs and slower deployment times in their cloud environment. What steps would you take to address this issue?", "related_lectures": []}, {"_class": "assessment", "id": 73184576, "assessment_type": "multiple-choice", "prompt": {"question": "Your team needs to ensure that their Docker containers are compliant with industry security standards in a cloud environment. What Docker features or practices would you implement?", "answers": ["Implement Docker Content Trust", "Regularly update and patch base images", "Utilize Docker security scanning tools", "Implement network segmentation for containers"], "explanation": "Ensuring Docker container security in a cloud environment involves practices like implementing Docker Content Trust, regularly updating base images, and using security scanning tools to detect vulnerabilities."}, "correct_response": ["c"], "section": "Docker Security Best Practices", "question_plain": "Your team needs to ensure that their Docker containers are compliant with industry security standards in a cloud environment. What Docker features or practices would you implement?", "related_lectures": []}, {"_class": "assessment", "id": 73184578, "assessment_type": "multiple-choice", "prompt": {"question": "What is the primary role of Docker plugins in the Docker ecosystem?", "answers": ["Enhance Security", "Extend Functionality", "Improve Performance", "Simplify Licensing"], "explanation": "Docker plugins play a crucial role in extending the functionality of Docker. They allow users to add new features and capabilities to Docker, enabling customization based on specific requirements."}, "correct_response": ["b"], "section": "Docker Ecosystem", "question_plain": "What is the primary role of Docker plugins in the Docker ecosystem?", "related_lectures": []}, {"_class": "assessment", "id": 73184580, "assessment_type": "multiple-choice", "prompt": {"question": "How does Docker enable the running of Linux-based containers on a Windows host?", "answers": ["Through Virtualization", "Using a Compatibility Layer", "Native Support", "Containerization"], "explanation": "Docker enables the running of Linux-based containers on a Windows host through a compatibility layer. This layer translates Linux system calls into Windows equivalents, allowing seamless execution of Linux containers on a Windows environment."}, "correct_response": ["b"], "section": "Docker Integration", "question_plain": "How does Docker enable the running of Linux-based containers on a Windows host?", "related_lectures": []}, {"_class": "assessment", "id": 73184582, "assessment_type": "multiple-choice", "prompt": {"question": "Name a common extension that can be added to Docker to enhance its native networking capabilities.", "answers": ["Docker Connect", "Docker Swarm", "Docker Compose", "CNI (Container Networking Interface)"], "explanation": "CNI (Container Networking Interface) is a common extension added to Docker to enhance its native networking capabilities. It provides a standardized interface for network plugins, allowing Docker containers to connect to various network environments."}, "correct_response": ["d"], "section": "Docker Networking", "question_plain": "Name a common extension that can be added to Docker to enhance its native networking capabilities.", "related_lectures": []}, {"_class": "assessment", "id": 73184584, "assessment_type": "multiple-choice", "prompt": {"question": "Which Docker plugin is typically used to integrate third-party storage solutions?", "answers": ["Docker Hub", "Docker Compose", "Docker Swarm", "Docker Volume Plugins"], "explanation": "Docker Volume Plugins are used to integrate third-party storage solutions. These plugins extend Docker&#x27;s volume management capabilities, allowing users to use external storage backends."}, "correct_response": ["d"], "section": "Docker Plugins", "question_plain": "Which Docker plugin is typically used to integrate third-party storage solutions?", "related_lectures": []}, {"_class": "assessment", "id": 73184608, "assessment_type": "multiple-choice", "prompt": {"question": "A company wants to deploy their Docker containers on both AWS and Azure using the same Docker configurations. Which Docker extension should they use to manage this multi-cloud setup effectively?", "answers": ["Docker Compose", "Docker Swarm", "Kubernetes", "Docker Cloud"], "explanation": "To manage a multi-cloud setup effectively, the company should use Kubernetes, a container orchestration platform that provides portability and scalability across different cloud providers. Kubernetes supports the deployment and management of containers on AWS, Azure, and other cloud platforms."}, "correct_response": ["c"], "section": "Docker Orchestration", "question_plain": "A company wants to deploy their Docker containers on both AWS and Azure using the same Docker configurations. Which Docker extension should they use to manage this multi-cloud setup effectively?", "related_lectures": []}, {"_class": "assessment", "id": 73184588, "assessment_type": "multiple-choice", "prompt": {"question": "How do Docker extensions assist with logging when managing multiple containers?", "answers": ["They provide enhanced graphical logs", "They integrate with third-party logging solutions", "They enable centralized log collection", "They offer real-time log analysis"], "explanation": "Docker extensions assist with logging in managing multiple containers by enabling centralized log collection. This ensures that logs from various containers are aggregated in one location for easier monitoring and analysis."}, "correct_response": ["c"], "section": "Docker Logging", "question_plain": "How do Docker extensions assist with logging when managing multiple containers?", "related_lectures": []}, {"_class": "assessment", "id": 73184590, "assessment_type": "multiple-choice", "prompt": {"question": "What is the advantage of using Docker&#x27;s plugin system versus incorporating functionality into the core Docker software?", "answers": ["Improved modularity", "Enhanced security", "Better performance", "Simplified deployment"], "explanation": "Docker&#x27;s plugin system offers improved modularity. By allowing additional functionality to be added through plugins, Docker maintains a core system that is lightweight and can be extended based on specific needs, enhancing flexibility and scalability."}, "correct_response": ["a"], "section": "Docker Advanced Features", "question_plain": "What is the advantage of using Docker&#x27;s plugin system versus incorporating functionality into the core Docker software?", "related_lectures": []}, {"_class": "assessment", "id": 73184592, "assessment_type": "multiple-choice", "prompt": {"question": "In a scenario where multiple operating systems are involved, how does Docker ensure compatibility across different platforms?", "answers": ["Platform-specific images", "Docker Swarm orchestration", "Abstraction through containerization", "Compatibility layers"], "explanation": "Docker ensures compatibility across different platforms by abstracting the underlying infrastructure through containerization. Containers encapsulate applications and their dependencies, making them platform-independent and ensuring consistent behavior across diverse environments."}, "correct_response": ["c"], "section": "Docker Cross-Platform Compatibility", "question_plain": "In a scenario where multiple operating systems are involved, how does Docker ensure compatibility across different platforms?", "related_lectures": []}, {"_class": "assessment", "id": 73184594, "assessment_type": "multiple-choice", "prompt": {"question": "How does Docker&#x27;s support for Windows Subsystem for Linux (WSL 2) improve the development experience for cross-platform applications?", "answers": ["Seamless integration", "Improved performance", "Enhanced security", "Native Windows containers"], "explanation": "Docker&#x27;s support for WSL 2 improves the development experience for cross-platform applications by providing improved performance. WSL 2 enhances file system performance, enabling developers to run Linux containers on Windows with better speed and efficiency."}, "correct_response": ["b"], "section": "Docker and WSL 2 Integration", "question_plain": "How does Docker&#x27;s support for Windows Subsystem for Linux (WSL 2) improve the development experience for cross-platform applications?", "related_lectures": []}, {"_class": "assessment", "id": 73184596, "assessment_type": "multiple-choice", "prompt": {"question": "To extend Docker&#x27;s functionalities, one can install a Docker _______ that interfaces with the Docker daemon.", "answers": ["Daemonset", "Compose", "Plugin", "Registry"], "explanation": "To extend Docker&#x27;s functionalities, one can install a Docker Plugin that interfaces with the Docker daemon. Plugins enhance Docker&#x27;s capabilities, allowing users to add custom features and functionality."}, "correct_response": ["c"], "section": "Docker Plugins", "question_plain": "To extend Docker&#x27;s functionalities, one can install a Docker _______ that interfaces with the Docker daemon.", "related_lectures": []}, {"_class": "assessment", "id": 73184598, "assessment_type": "multiple-choice", "prompt": {"question": "Cross-platform container development is facilitated by Docker&#x27;s use of the _______ format for images.", "answers": ["TAR", "YAML", "JSON", "OCI"], "explanation": "Cross-platform container development is facilitated by Docker&#x27;s use of the OCI (Open Container Initiative) format for images. OCI ensures compatibility and interoperability across various container runtimes."}, "correct_response": ["d"], "section": "Docker Images", "question_plain": "Cross-platform container development is facilitated by Docker&#x27;s use of the _______ format for images.", "related_lectures": []}, {"_class": "assessment", "id": 73184600, "assessment_type": "multiple-choice", "prompt": {"question": "The Docker _______ command is used to manage the installation and lifecycle of plugins.", "answers": ["Plugin", "Hub", "Install", "Swarm"], "explanation": "The Docker Plugin command is used to manage the installation and lifecycle of plugins. This command allows users to add, remove, and inspect plugins, extending Docker&#x27;s functionality."}, "correct_response": ["c"], "section": "Docker Plugins", "question_plain": "The Docker _______ command is used to manage the installation and lifecycle of plugins.", "related_lectures": []}, {"_class": "assessment", "id": 73184602, "assessment_type": "multiple-choice", "prompt": {"question": "Docker plugins follow a _______ architecture, which allows them to be used without requiring changes to Docker&#x27;s core.", "answers": ["Modular", "Microservices", "Decentralized", "Plugin"], "explanation": "Docker plugins follow a modular architecture, enabling their use without altering Docker&#x27;s core. This modularity enhances extensibility and flexibility in integrating additional functionalities without disrupting the core system."}, "correct_response": ["a"], "section": "Docker Plugin Architecture", "question_plain": "Docker plugins follow a _______ architecture, which allows them to be used without requiring changes to Docker&#x27;s core.", "related_lectures": []}, {"_class": "assessment", "id": 73184604, "assessment_type": "multiple-choice", "prompt": {"question": "When building cross-platform Docker containers, the _______ file must specify the appropriate base images for each targeted platform.", "answers": ["Dockerfile", "Manifest", "Compose", "Registry"], "explanation": "When building cross-platform Docker containers, the manifest file must specify the appropriate base images for each targeted platform. The manifest file provides information about the layers and configurations for different architectures."}, "correct_response": ["b"], "section": "Cross-Platform Docker", "question_plain": "When building cross-platform Docker containers, the _______ file must specify the appropriate base images for each targeted platform.", "related_lectures": []}, {"_class": "assessment", "id": 73184606, "assessment_type": "multiple-choice", "prompt": {"question": "To ensure that Docker containers can run on multiple platforms, developers must consider _______ compatibility in their Dockerfiles.", "answers": ["Architecture", "OS", "Platform", "Kernel"], "explanation": "To ensure that Docker containers can run on multiple platforms, developers must consider platform compatibility in their Dockerfiles. This involves specifying the target platform architecture and OS, ensuring seamless execution across diverse environments."}, "correct_response": ["c"], "section": "Cross-Platform Docke", "question_plain": "To ensure that Docker containers can run on multiple platforms, developers must consider _______ compatibility in their Dockerfiles.", "related_lectures": []}]};
+    var correct = 0;
+    var total = 0;
+    const questionData = quizData.questions
+    const passPercent = quizData.pass_percent
+    function kiemTraDapAn(correctMuti, choise) {
+      // Chuyển đổi các số trong choise thành chữ cái tương ứng
+      const choiseLetters = choise.map(num => String.fromCharCode(parseInt(num) + 'a'.charCodeAt(0)));
+      console.log('choiseLetters',choiseLetters)
+      // Kiểm tra điều kiện:
+      // 1. Chiều dài hai mảng phải bằng nhau
+      // 2. Tất cả các phần tử trong choiseLetters phải có trong correctMuti
+      if (
+        choiseLetters.length === correctMuti.length &&
+        choiseLetters.every(c => correctMuti.includes(c))
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    function main() {
+      total = questionData.length;
+
+      var questions = [];
+      for (var i = 0; i < questionData.length; i++) {
+        var question = questionData[i];
+        var questionText = question.prompt.question;
+        var answers = question.prompt.answers;
+        var correctAnswer = question.correct_response[0];
+        var correctMuti = question.correct_response;
+        var correctAnswerText = answers[correctAnswer.charCodeAt(0) - 97];
+        var questionObj = {
+          question: questionText,
+          correctAnswer: correctAnswerText,
+          answers: answers,
+          id: question.id,
+          explanation: question.prompt.explanation,
+          correctMuti
+
+        };
+        questions.push(questionObj);
+      }
+      console.log(questions.filter(i => i.correctMuti.length > 1))
+
+      updateScore();
+
+      // display the questions
+      var questionsContainer = document.getElementById("quiz-container");
+      for (var i = 0; i < questions.length; i++) {
+        var question = questions[i];
+        var questionElement = document.createElement("form");
+        questionElement.className = "question";
+        questionElement.innerHTML =
+          "<span>Question " +
+          (i + 1) +
+          ":</span>" +
+          '<div class="question-prompt">' +
+          question.question +
+          "</div>";
+        questionElement.id = question.id;
+        questionElement.classList.add("quiz-container");
+        var answersElement = document.createElement("ul");
+        answersElement.className = "answers";
+        console.log('question.correctMuti', question.correctMuti.length)
+        if (question.correctMuti.length > 1) {
+          for (var j = 0; j < question.answers.length; j++) {
+            var answer = question.answers[j];
+            var answerElement = document.createElement("li");
+            answerElement.className = "answer";
+            answerElement.innerHTML =
+              '<label for="input-' +
+              question.id +
+              "-" +
+              j +
+              '"><div onclick="select2(' +
+              question.id +
+              ", " +
+              j +
+              ')"><input id="input-' +
+              question.id +
+              "-" +
+              j +
+              '" type="checkbox" name="question' +
+              i +
+              '" value="' +
+              j +
+              '">' +
+              answer +
+              "</input></div></label>";
+            answerElement.classList.add("question-answer");
+            answersElement.appendChild(answerElement);
+          }
+        } else {
+          for (var j = 0; j < question.answers.length; j++) {
+            var answer = question.answers[j];
+            var answerElement = document.createElement("li");
+            answerElement.className = "answer";
+            answerElement.innerHTML =
+              '<label for="input-' +
+              question.id +
+              "-" +
+              j +
+              '"><div onclick="select(' +
+              question.id +
+              ", " +
+              j +
+              ')"><span></span><input id="input-' +
+              question.id +
+              "-" +
+              j +
+              '" type="radio" name="question' +
+              i +
+              '" value="' +
+              j +
+              '">' +
+              answer +
+              "</input></div></label>";
+            answerElement.classList.add("question-answer");
+            answersElement.appendChild(answerElement);
+          }
+        }
+        questionElement.appendChild(answersElement);
+
+        // add a submit button
+        var submitButton = document.createElement("button");
+        submitButton.className = "submit";
+        submitButton.innerHTML = "Submit";
+        submitButton.classList.add("submit-button");
+
+        submitButton.addEventListener("click", function (e) {
+          e.preventDefault();
+          var questionElement = e.target.parentElement;
+          var questionId = questionElement.id;
+          var question = questions.filter(function (q) {
+            return q.id == questionId;
+          })[0];
+
+          // set the border color of all answers to black
+          var answers = questionElement.getElementsByClassName("answer");
+          for (var i = 0; i < answers.length; i++) {
+            console.log(answers[i]);
+            answers[i].children[0].style.borderColor = "#1c1d1f";
+          }
+
+          var answer = questionElement.querySelector(
+            'input[type="radio"]:checked'
+          );
+          var mutilanswer = questionElement.querySelectorAll(
+            'input[type="checkbox"]:checked'
+          );
+          if (answer) {
+            var answerIndex = answer.value;
+            var answerText = question.answers[answerIndex];
+            if (answerText == question.correctAnswer) {
+              answer.parentElement.parentElement.style.borderColor =
+                "limegreen";
+              // alert("Correct!");
+              correct++;
+              updateScore();
+              questionElement.innerHTML += question.explanation
+
+            } else {
+              answer.parentElement.parentElement.style.borderColor = "red";
+              // alert("Incorrect!");
+            }
+          }
+          if (mutilanswer) {
+            var answerIndex = [...mutilanswer].map(a => a.value);
+
+            if (kiemTraDapAn(question.correctMuti, answerIndex)) {
+              [...mutilanswer].map(item => {
+                item.parentElement.parentElement.style.borderColor =
+                "limegreen";
+              })
+              // alert("Correct!");
+              correct++;
+              updateScore();
+              questionElement.innerHTML += question.explanation
+            } else {
+              [...mutilanswer].map(item => {
+                item.parentElement.parentElement.style.borderColor =
+                "red";
+              })
+            }
+            // var answerText = question.answers[answerIndex];
+            // if (answerText == question.correctAnswer) {
+            //   answer.parentElement.parentElement.style.borderColor =
+            //     "limegreen";
+            //   // alert("Correct!");
+            //   correct++;
+            //   updateScore();
+            //   questionElement.innerHTML += question.explanation
+
+            // } else {
+            //   answer.parentElement.parentElement.style.borderColor = "red";
+            //   // alert("Incorrect!");
+            // }
+          }
+          // else {
+          //   alert("Please select an answer.");
+          // }
+
+        });
+
+        // add button
+        questionElement.appendChild(submitButton);
+
+        questionsContainer.appendChild(questionElement);
+      }
+    }
+
+    function select(question, answer) {
+      var questionElement = document.getElementById(question);
+      var answers = questionElement.getElementsByClassName("answer");
+      for (var i = 0; i < answers.length; i++) {
+        var span = answers[i].children[0].children[0].children[0];
+        var input = answers[i].children[0].children[0].children[1];
+        span.classList.remove("selected");
+        input.checked = false;
+      }
+      var span = answers[answer].children[0].children[0].children[0];
+      var input = answers[answer].children[0].children[0].children[1];
+      span.classList.add("selected");
+      input.checked = true;
+    }
+    function select2(question, answer) {
+      var questionElement = document.getElementById(question);
+      var answers = questionElement.getElementsByClassName("answer");
+      // for (var i = 0; i < answers.length; i++) {
+      //   var span = answers[i].children[0].children[0].children[0];
+      //   var input = answers[i].children[0].children[0].children[1];
+      //   if(input.checked){
+      //     span.classList.remove("selected");
+      //     input.checked = false;
+      //   }
+
+      // }
+      // var span = answers[answer].children[0].children[0].children[0];
+      // var input = answers[answer].children[0].children[0].children[1];
+      // span.classList.add("selected");
+      // input.checked = true;
+    }
+    function updateScore() {
+      var scoreElem = document.getElementById("score");
+      const score = (correct / total) * 100;
+      scoreElem.innerHTML = "Score: " + score + "/" + passPercent + "%";
+    }
+  </script>
+</body>
+
+</html>

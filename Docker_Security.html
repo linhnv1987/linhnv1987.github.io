@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz</title>
+
+  <style>
+    body {
+      font-family: sf pro text, -apple-system, BlinkMacSystemFont, Roboto,
+        segoe ui, Helvetica, Arial, sans-serif, apple color emoji,
+        segoe ui emoji, segoe ui symbol;
+      font-weight: 400;
+      line-height: 22.4px;
+      font-size: 16px;
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    ul,
+    ol {
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      max-width: none;
+    }
+
+    code {
+      background-color: #fff;
+      border: 1px solid #d1d7dc;
+      color: #b4690e;
+      font-size: 90%;
+      padding: 0.2rem 0.4rem;
+    }
+
+    .quiz-content {
+      padding: 2.4rem;
+      word-break: break-word;
+      max-width: 86rem;
+      margin: 0 auto;
+    }
+
+    .quiz-container {
+      margin: 0 auto;
+      max-width: 84rem;
+      padding: 0;
+    }
+
+    .question {
+      margin-bottom: 5rem;
+    }
+
+    .question span {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .question-prompt {
+      margin-top: 0.8rem;
+      font-weight: 700;
+    }
+
+    .question-answer {
+      margin-top: 1.6rem;
+      padding-left: 0;
+      box-sizing: border-box;
+    }
+
+    .question-answer label {
+      max-width: 80rem;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      min-width: 18rem;
+      border: solid #1c1d1f 2px;
+    }
+
+    .question-answer div {
+      padding: 0.5rem;
+      width: 100%;
+    }
+
+    .question-answer div:hover {
+      background-color: #f5f5f5;
+    }
+
+    /* .question-answer input {
+      display: none;
+    } */
+
+    .question-answer span {
+      width: 1rem;
+      height: 1rem;
+      margin-right: 1.6rem;
+      top: 0;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+      border: 0.2rem solid #1c1d1f;
+      position: relative;
+    }
+
+    .selected {
+      background: #1c1d1f;
+      box-shadow: 0 0 0 0.4rem #fff inset;
+    }
+
+    .score {
+      position: fixed;
+      background-color: #b4690e;
+      padding: 10px;
+      color: white;
+    }
+  </style>
+</head>
+
+<body onload="main()">
+  <div id="score" class="score">
+    <span>Score: N/A of N/A</span>
+  </div>
+  <div id="quiz-container" class="quiz-content"></div>
+
+  <script>
+    const quizData = {"pass_percent": 50, "questions": [{"_class": "assessment", "id": 73184382, "assessment_type": "multiple-choice", "prompt": {"question": "What is the purpose of Docker security scanning?", "answers": ["To prevent containers from running", "To identify and fix vulnerabilities in container images", "To limit network access for containers", "To encrypt data within containers"], "explanation": "Docker security scanning is used to identify and fix vulnerabilities in container images. It helps ensure that images used in containers are free from known security issues, reducing the risk of exploitation."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "What is the purpose of Docker security scanning?", "related_lectures": []}, {"_class": "assessment", "id": 73184380, "assessment_type": "multiple-choice", "prompt": {"question": "Why is it recommended to run Docker containers with a non-root user?", "answers": ["Increased Performance", "Improved Isolation", "Enhanced Security", "Simplified Deployment"], "explanation": "Running Docker containers with a non-root user enhances security. This practice minimizes the potential impact of security vulnerabilities, as processes within the container won&#x27;t have root-level access to the host system."}, "correct_response": ["c"], "section": "Docker Security", "question_plain": "Why is it recommended to run Docker containers with a non-root user?", "related_lectures": []}, {"_class": "assessment", "id": 73184476, "assessment_type": "multiple-choice", "prompt": {"question": "Describe a scenario where it would be essential to implement both image signing and scanning for a Dockerized application.", "answers": ["Deploying Critical Infrastructure", "Continuous Integration/Continuous Deployment (CI/CD) Pipeline", "Development Environment", "Isolated Testing Environments"], "explanation": "In scenarios involving a CI/CD pipeline, implementing both image signing and scanning is essential. This ensures that only signed and verified images are deployed, reducing the risk of introducing vulnerabilities or compromised code into the production environment."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "Describe a scenario where it would be essential to implement both image signing and scanning for a Dockerized application.", "related_lectures": []}, {"_class": "assessment", "id": 73184448, "assessment_type": "multiple-choice", "prompt": {"question": "By default, Docker runs as which user, and why is it significant from a security perspective?", "answers": ["root", "docker", "admin", "user"], "explanation": "By default, Docker runs as the root user. This is significant from a security perspective because it grants the Docker daemon elevated privileges. It&#x27;s recommended to use user namespaces or other methods to limit Docker&#x27;s access and mitigate potential security risks."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "By default, Docker runs as which user, and why is it significant from a security perspective?", "related_lectures": []}, {"_class": "assessment", "id": 73184474, "assessment_type": "multiple-choice", "prompt": {"question": "You have been asked to audit a Docker setup for security best practices. What Docker daemon configurations would you check first?", "answers": ["TLS Encryption", "Image Layering", "Container Orchestration", "Network Segmentation"], "explanation": "When auditing Docker for security, checking Docker daemon configurations is crucial. One of the first things to examine is TLS encryption settings. This ensures secure communication between Docker components, reducing the risk of unauthorized access or data interception."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "You have been asked to audit a Docker setup for security best practices. What Docker daemon configurations would you check first?", "related_lectures": []}, {"_class": "assessment", "id": 73184472, "assessment_type": "multiple-choice", "prompt": {"question": "The process of signing a Docker image to verify its source and integrity is done using the Docker _______ command.", "answers": ["Sign", "Certify", "Verify", "Trust"], "explanation": "The docker trust command is used to sign and verify Docker images, ensuring their authenticity and integrity. This is crucial for security and trustworthiness in a containerized environment."}, "correct_response": ["c"], "section": "Docker Security", "question_plain": "The process of signing a Docker image to verify its source and integrity is done using the Docker _______ command.", "related_lectures": []}, {"_class": "assessment", "id": 73184470, "assessment_type": "multiple-choice", "prompt": {"question": "To protect secret data used by Docker containers, such as API keys or credentials, it is advisable to use Docker _______.", "answers": ["Secrets", "Env Variables", "Security Labels", "Encryption"], "explanation": "Docker Secrets provide a secure way to manage sensitive data within containers. They are specifically designed to protect secret information like API keys or credentials from unauthorized access."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "To protect secret data used by Docker containers, such as API keys or credentials, it is advisable to use Docker _______.", "related_lectures": []}, {"_class": "assessment", "id": 73184468, "assessment_type": "multiple-choice", "prompt": {"question": "Docker daemon attack surface can be minimized by ensuring it is not listening on ________, which would otherwise expose it to unnecessary network traffic.", "answers": ["All Interfaces", "Localhost", "Port 2375", "TCP"], "explanation": "The Docker daemon should not be listening on all interfaces to minimize the attack surface. Listening only on localhost reduces exposure to unnecessary network traffic and potential security risks."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "Docker daemon attack surface can be minimized by ensuring it is not listening on ________, which would otherwise expose it to unnecessary network traffic.", "related_lectures": []}, {"_class": "assessment", "id": 73184466, "assessment_type": "multiple-choice", "prompt": {"question": "For enhanced Docker daemon security, administrators should configure the daemon with _______ to ensure that only authenticated clients can connect.", "answers": ["#NAME?", "#NAME?", "#NAME?", "#NAME?"], "explanation": "For enhanced Docker daemon security, administrators should configure the daemon with --auth-enabled to ensure that only authenticated clients can connect. This adds an extra layer of protection by requiring authentication for all connections to the daemon."}, "correct_response": ["d"], "section": "Docker Security", "question_plain": "For enhanced Docker daemon security, administrators should configure the daemon with _______ to ensure that only authenticated clients can connect.", "related_lectures": []}, {"_class": "assessment", "id": 73184464, "assessment_type": "multiple-choice", "prompt": {"question": "The Docker daemon can be started with _______ to control the level of debug information output, which is essential for both troubleshooting and minimizing security exposure.", "answers": ["#NAME?", "#NAME?", "#NAME?", "#NAME?"], "explanation": "The Docker daemon can be started with --log-level to control the level of debug information output. This is crucial for troubleshooting and minimizing security exposure by tailoring the amount of information displayed."}, "correct_response": ["d"], "section": "Docker Administration", "question_plain": "The Docker daemon can be started with _______ to control the level of debug information output, which is essential for both troubleshooting and minimizing security exposure.", "related_lectures": []}, {"_class": "assessment", "id": 73184462, "assessment_type": "multiple-choice", "prompt": {"question": "To enable HTTPS for a Docker registry, it is necessary to configure it with a _______ for secure communication.", "answers": ["TLS certificate", "API token", "HMAC key", "OAuth token"], "explanation": "To enable HTTPS for a Docker registry, it is necessary to configure it with a TLS certificate for secure communication. This certificate ensures the confidentiality and integrity of data exchanged between the Docker client and the registry."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "To enable HTTPS for a Docker registry, it is necessary to configure it with a _______ for secure communication.", "related_lectures": []}, {"_class": "assessment", "id": 73184460, "assessment_type": "multiple-choice", "prompt": {"question": "In the context of a CI/CD pipeline, how would you automate the process of signing Docker images to maintain security throughout the development lifecycle?", "answers": ["Use Docker Security Scanning", "Implement Automated Code Review", "Utilize GPG (GNU Privacy Guard) signatures", "Apply Network Policies"], "explanation": "In a CI/CD pipeline, automating the signing of Docker images for security involves using GPG signatures. This cryptographic method ensures the authenticity and integrity of images, adding an extra layer of security throughout the development lifecycle."}, "correct_response": ["c"], "section": "CI/CD and Docker", "question_plain": "In the context of a CI/CD pipeline, how would you automate the process of signing Docker images to maintain security throughout the development lifecycle?", "related_lectures": []}, {"_class": "assessment", "id": 73184458, "assessment_type": "multiple-choice", "prompt": {"question": "What is an essential step to take when configuring TLS for the Docker daemon to ensure secure communications?", "answers": ["Generate and use self-signed certificates", "Use a public CA (Certificate Authority)", "Disable TLS for internal communications", "Use a single, shared certificate for all nodes"], "explanation": "An essential step for configuring TLS for the Docker daemon is to use a public CA (Certificate Authority). This ensures that the certificates are issued by a trusted third party, enhancing the security of communications between Docker daemons."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "What is an essential step to take when configuring TLS for the Docker daemon to ensure secure communications?", "related_lectures": []}, {"_class": "assessment", "id": 73184456, "assessment_type": "multiple-choice", "prompt": {"question": "How does Docker ensure the integrity and trustworthiness of containers running in a swarm mode?", "answers": ["Content Trust", "Docker Secrets", "Network Isolation", "Node Affinity"], "explanation": "Docker ensures the integrity and trustworthiness of containers in swarm mode through Content Trust. This feature uses digital signatures to verify the authenticity and origin of container images, preventing unauthorized or tampered images from being deployed."}, "correct_response": ["a"], "section": "Docker Swarm", "question_plain": "How does Docker ensure the integrity and trustworthiness of containers running in a swarm mode?", "related_lectures": []}, {"_class": "assessment", "id": 73184454, "assessment_type": "multiple-choice", "prompt": {"question": "When setting up a secure Docker registry, what is a crucial component to implement to ensure the integrity and confidentiality of the images?", "answers": ["Multi-factor authentication", "Secure Socket Layer (SSL)", "Public image sharing", "Continuous integration"], "explanation": "When setting up a secure Docker registry, implementing Secure Socket Layer (SSL) is crucial. SSL ensures the confidentiality and integrity of the images during transmission, preventing unauthorized access and tampering."}, "correct_response": ["b"], "section": "Docker Registry Security", "question_plain": "When setting up a secure Docker registry, what is a crucial component to implement to ensure the integrity and confidentiality of the images?", "related_lectures": []}, {"_class": "assessment", "id": 73184452, "assessment_type": "multiple-choice", "prompt": {"question": "What is the purpose of signing Docker images?", "answers": ["To compress images for efficient storage", "To encrypt sensitive data within images", "To verify the authenticity and integrity of images", "To accelerate image deployment"], "explanation": "Signing Docker images serves the purpose of ensuring the authenticity and integrity of images. This involves using cryptographic signatures to verify that the image has not been tampered with and comes from a trusted source."}, "correct_response": ["c"], "section": "Docker Image Management", "question_plain": "What is the purpose of signing Docker images?", "related_lectures": []}, {"_class": "assessment", "id": 73184450, "assessment_type": "multiple-choice", "prompt": {"question": "How can you restrict the network access of the Docker daemon to improve security?", "answers": ["Using Docker Compose", "Configuring iptables rules", "Setting Docker daemon to run as root", "Enabling all network ports by default"], "explanation": "Restricting network access to the Docker daemon involves configuring iptables rules. By defining specific rules, you can control which network traffic is allowed to reach the Docker daemon, enhancing overall security."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "How can you restrict the network access of the Docker daemon to improve security?", "related_lectures": []}, {"_class": "assessment", "id": 73184508, "assessment_type": "multiple-choice", "prompt": {"question": "You need to deploy a service that handles sensitive payment information in a Docker container. How would you ensure that network security is maintained and that the data is handled securely?", "answers": ["Use Docker Content Trust", "Implement Docker Secrets", "Enable Docker AppArmor", "Utilize Docker Network Policies"], "explanation": "To ensure network security and handle sensitive data securely, Docker Network Policies can be employed. These policies define rules for communication between containers, restricting access and enhancing security in a microservices architecture."}, "correct_response": ["d"], "section": "Docker Security", "question_plain": "You need to deploy a service that handles sensitive payment information in a Docker container. How would you ensure that network security is maintained and that the data is handled securely?", "related_lectures": []}, {"_class": "assessment", "id": 73184478, "assessment_type": "multiple-choice", "prompt": {"question": "If an organization wants to enforce that only signed Docker images are used in their environment, what Docker feature would they need to configure?", "answers": ["Docker Content Trust", "Docker Secrets Management", "Docker Security Groups", "Docker Identity and Access Management"], "explanation": "To enforce the use of only signed Docker images, the organization needs to configure Docker Content Trust. This feature ensures the integrity and authenticity of images by signing them, providing a secure mechanism for image verification and deployment."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "If an organization wants to enforce that only signed Docker images are used in their environment, what Docker feature would they need to configure?", "related_lectures": []}, {"_class": "assessment", "id": 73184480, "assessment_type": "multiple-choice", "prompt": {"question": "Which Docker network driver is recommended for cases where network security is a high priority and isolation is required between containers?", "answers": ["Bridge", "Overlay", "Macvlan", "Host"], "explanation": "The Overlay network driver is recommended for cases where network security is a high priority and isolation is required between containers. It facilitates communication between containers across multiple Docker hosts while providing network isolation."}, "correct_response": ["b"], "section": "Docker Networking", "question_plain": "Which Docker network driver is recommended for cases where network security is a high priority and isolation is required between containers?", "related_lectures": []}, {"_class": "assessment", "id": 73184482, "assessment_type": "multiple-choice", "prompt": {"question": "How does Docker Bench for Security assist administrators in securing their Docker configurations?", "answers": ["It provides real-time monitoring of Docker containers", "It automatically applies security patches to Docker hosts", "It performs automated security scans and provides recommendations", "It encrypts all communication between Docker containers"], "explanation": "Docker Bench for Security assists administrators by performing automated security scans on Docker configurations. It provides recommendations for enhancing security based on best practices."}, "correct_response": ["c"], "section": "Docker Security", "question_plain": "How does Docker Bench for Security assist administrators in securing their Docker configurations?", "related_lectures": []}, {"_class": "assessment", "id": 73184484, "assessment_type": "multiple-choice", "prompt": {"question": "What is the recommended way to handle sensitive data such as API keys or credentials when using Docker containers?", "answers": ["Embed them directly into the container image", "Pass them as environment variables", "Store them in a plaintext file within the container", "Use Docker secrets or external configuration management tools"], "explanation": "The recommended way to handle sensitive data in Docker containers is to use Docker secrets or external configuration management tools. This approach enhances security by keeping sensitive information separate from the container image and runtime environment."}, "correct_response": ["d"], "section": "Docker Security", "question_plain": "What is the recommended way to handle sensitive data such as API keys or credentials when using Docker containers?", "related_lectures": []}, {"_class": "assessment", "id": 73184486, "assessment_type": "multiple-choice", "prompt": {"question": "When configuring Docker for secure communication between client and server, which cryptographic protocol is recommended to prevent unauthorized access?", "answers": ["TLS", "SSL", "SSH", "HTTPS"], "explanation": "When securing Docker communication, Transport Layer Security (TLS) is recommended. TLS ensures secure and encrypted communication between the Docker client and server, preventing unauthorized access and data interception."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "When configuring Docker for secure communication between client and server, which cryptographic protocol is recommended to prevent unauthorized access?", "related_lectures": []}, {"_class": "assessment", "id": 73184488, "assessment_type": "multiple-choice", "prompt": {"question": "How does Docker Bench for Security automate the process of hardening Docker hosts against potential threats?", "answers": ["It installs a firewall on the host", "It automatically updates Docker images", "It performs security benchmark tests", "It encrypts data at rest"], "explanation": "Docker Bench for Security automates the hardening process by conducting security benchmark tests. It checks the host against best practices, highlighting vulnerabilities and potential threats, helping users enhance the security of their Docker hosts."}, "correct_response": ["c"], "section": "Docker Security", "question_plain": "How does Docker Bench for Security automate the process of hardening Docker hosts against potential threats?", "related_lectures": []}, {"_class": "assessment", "id": 73184490, "assessment_type": "multiple-choice", "prompt": {"question": "What are some of the security considerations one must keep in mind when setting up Docker Swarm mode for orchestrating a cluster of Docker engines?", "answers": ["Node authentication, network encryption, and secure key management", "Load balancing, container isolation, and image signing", "Container runtime security, host OS patching, and network segmentation", "Docker API access control, image scanning, and user privilege management"], "explanation": "Security considerations for Docker Swarm mode include node authentication, network encryption, and secure key management. Ensuring these measures are in place helps maintain the integrity and confidentiality of the orchestrated Docker cluster."}, "correct_response": ["a"], "section": "Docker Swarm", "question_plain": "What are some of the security considerations one must keep in mind when setting up Docker Swarm mode for orchestrating a cluster of Docker engines?", "related_lectures": []}, {"_class": "assessment", "id": 73184492, "assessment_type": "multiple-choice", "prompt": {"question": "To restrict and control network traffic to containers, Docker can integrate with ________, a powerful firewalling tool in Linux.", "answers": ["iptables", "firewalld", "ufw", "nftables"], "explanation": "Docker integrates with iptables to control network traffic to containers. Iptables is a widely-used firewall management tool in Linux."}, "correct_response": ["a"], "section": "Docker Networking", "question_plain": "To restrict and control network traffic to containers, Docker can integrate with ________, a powerful firewalling tool in Linux.", "related_lectures": []}, {"_class": "assessment", "id": 73184494, "assessment_type": "multiple-choice", "prompt": {"question": "Docker Bench for Security outputs a score following the _______ guidelines for Docker configurations to indicate compliance and risk.", "answers": ["OWASP", "CIS", "NIST", "ISO 27001"], "explanation": "Docker Bench for Security outputs a score following the Center for Internet Security (CIS) guidelines for Docker configurations. This score indicates how well the Docker setup complies with security best practices."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "Docker Bench for Security outputs a score following the _______ guidelines for Docker configurations to indicate compliance and risk.", "related_lectures": []}, {"_class": "assessment", "id": 73184496, "assessment_type": "multiple-choice", "prompt": {"question": "Docker secrets, used for managing sensitive data, are stored in the _______ filesystem and are encrypted during transit and at rest.", "answers": ["/etc/secrets", "/var/secure", "/run/secrets", "/opt/crypto"], "explanation": "Docker secrets, used for managing sensitive data, are stored in the /run/secrets filesystem. These secrets are encrypted during transit and at rest to ensure secure handling of sensitive information."}, "correct_response": ["c"], "section": "Docker Security", "question_plain": "Docker secrets, used for managing sensitive data, are stored in the _______ filesystem and are encrypted during transit and at rest.", "related_lectures": []}, {"_class": "assessment", "id": 73184498, "assessment_type": "multiple-choice", "prompt": {"question": "For advanced network security, Docker can be configured to use _______ network policies to control ingress and egress traffic between containers.", "answers": ["Kubernetes", "Calico", "Swarm", "Istio"], "explanation": "For advanced network security in Docker, Calico network policies can be configured to control ingress and egress traffic between containers. Calico provides fine-grained control over network traffic within a Docker environment."}, "correct_response": ["b"], "section": "Docker Networking", "question_plain": "For advanced network security, Docker can be configured to use _______ network policies to control ingress and egress traffic between containers.", "related_lectures": []}, {"_class": "assessment", "id": 73184500, "assessment_type": "multiple-choice", "prompt": {"question": "A _______ scan can be performed as part of the Docker Bench for Security to check for known vulnerabilities in Docker images.", "answers": ["Compliance", "Vulnerability", "Liveness", "Configuration"], "explanation": "A vulnerability scan can be performed as part of the Docker Bench for Security to check for known vulnerabilities in Docker images. This scan helps ensure the security of Docker deployments by identifying and addressing potential security issues."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "A _______ scan can be performed as part of the Docker Bench for Security to check for known vulnerabilities in Docker images.", "related_lectures": []}, {"_class": "assessment", "id": 73184502, "assessment_type": "multiple-choice", "prompt": {"question": "To securely manage secrets in a Docker Swarm, the _______ service is used to distribute secrets only to the relevant services that need them.", "answers": ["Vault", "Secret", "Keycloak", "HashiCorp"], "explanation": "To securely manage secrets in a Docker Swarm, the Vault service is used to distribute secrets only to the relevant services that need them. Vault provides a centralized and secure way to manage sensitive information in a Docker Swarm environment."}, "correct_response": ["a"], "section": "Docker Swarm", "question_plain": "To securely manage secrets in a Docker Swarm, the _______ service is used to distribute secrets only to the relevant services that need them.", "related_lectures": []}, {"_class": "assessment", "id": 73184504, "assessment_type": "multiple-choice", "prompt": {"question": "You are tasked with enforcing network security policies in a Docker environment where multiple containers need to communicate securely. Which Docker features would you use to establish these secure communication channels?", "answers": ["Docker Swarm Overlay Networks", "Docker Compose Networks", "Docker Host Bridge Networks", "Docker User-defined Bridge Networks"], "explanation": "Docker Swarm Overlay Networks provide secure communication channels between containers. They offer built-in encryption and isolation, making them suitable for enforcing network security policies in a Docker environment."}, "correct_response": ["a"], "section": "Docker Networking", "question_plain": "You are tasked with enforcing network security policies in a Docker environment where multiple containers need to communicate securely. Which Docker features would you use to establish these secure communication channels?", "related_lectures": []}, {"_class": "assessment", "id": 73184506, "assessment_type": "multiple-choice", "prompt": {"question": "During a security audit with Docker Bench for Security, your Docker host configuration does not pass certain checks. What steps would you take to remediate these findings?", "answers": ["Update Docker Engine", "Adjust Docker Security Options", "Modify Docker Compose File", "Harden Host OS"], "explanation": "To remediate Docker Bench for Security findings, you would adjust Docker Security Options. This involves configuring security settings in the Docker daemon configuration to address specific audit issues."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "During a security audit with Docker Bench for Security, your Docker host configuration does not pass certain checks. What steps would you take to remediate these findings?", "related_lectures": []}, {"_class": "assessment", "id": 73184414, "assessment_type": "multiple-choice", "prompt": {"question": "What is the purpose of Docker secrets in managing sensitive data?", "answers": ["Securely store and manage sensitive information", "Enhance container performance", "Streamline container deployment", "Facilitate container networking"], "explanation": "Docker secrets are designed to securely store and manage sensitive data, such as passwords and API keys, by allowing applications to access them without exposing the information in plain text. This enhances overall security in containerized environments."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "What is the purpose of Docker secrets in managing sensitive data?", "related_lectures": []}, {"_class": "assessment", "id": 73184384, "assessment_type": "multiple-choice", "prompt": {"question": "Which of the following is a best practice for securing Docker containers?", "answers": ["Running containers as root", "Limiting container capabilities", "Using default configuration settings", "Sharing the host OS with containers"], "explanation": "A best practice for securing Docker containers is limiting container capabilities. This reduces the attack surface by restricting the actions containers can perform, improving overall security."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "Which of the following is a best practice for securing Docker containers?", "related_lectures": []}, {"_class": "assessment", "id": 73184386, "assessment_type": "multiple-choice", "prompt": {"question": "What does Docker security scanning primarily detect within container images?", "answers": ["Known Vulnerabilities", "Open Ports", "Unauthorized Users", "Application Logs"], "explanation": "Docker security scanning primarily detects known vulnerabilities within container images. This helps in identifying and addressing potential security risks before deploying containers into production."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "What does Docker security scanning primarily detect within container images?", "related_lectures": []}, {"_class": "assessment", "id": 73184388, "assessment_type": "multiple-choice", "prompt": {"question": "How can you restrict a container\u2019s system calls to enhance security?", "answers": ["Use AppArmor or SELinux", "Increase Container Privileges", "Disable Container Logging", "Share Host Kernel with Containers"], "explanation": "To enhance security, you can restrict a container\u2019s system calls by using security modules like AppArmor or SELinux. These tools allow you to define and enforce security policies for container processes."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "How can you restrict a container\u2019s system calls to enhance security?", "related_lectures": []}, {"_class": "assessment", "id": 73184390, "assessment_type": "multiple-choice", "prompt": {"question": "When setting up Docker for production, which of these practices is recommended to secure the Docker daemon?", "answers": ["Run Docker Daemon as Root", "Enable Swarm Mode", "Disable Content Trust", "Use TLS for Securing Docker Daemon"], "explanation": "To secure the Docker daemon in a production environment, it&#x27;s recommended to use TLS (Transport Layer Security). This encrypts the communication between Docker clients and the daemon, adding an extra layer of protection."}, "correct_response": ["d"], "section": "Docker Security", "question_plain": "When setting up Docker for production, which of these practices is recommended to secure the Docker daemon?", "related_lectures": []}, {"_class": "assessment", "id": 73184392, "assessment_type": "multiple-choice", "prompt": {"question": "How can Docker Notary help in the security of Docker images?", "answers": ["Ensures image integrity", "Enforces access control", "Provides encryption for images", "Monitors image runtime behavior"], "explanation": "Docker Notary enhances Docker image security by ensuring image integrity. It achieves this by signing and verifying image content, making it difficult for attackers to tamper with the images without detection."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "How can Docker Notary help in the security of Docker images?", "related_lectures": []}, {"_class": "assessment", "id": 73184394, "assessment_type": "multiple-choice", "prompt": {"question": "What is a primary security benefit of using minimal base images in Docker?", "answers": ["Reduced attack surface", "Faster image build times", "Enhanced compatibility", "Improved runtime performance"], "explanation": "Using minimal base images in Docker contributes to security by reducing the attack surface. Minimal images have fewer components and dependencies, minimizing potential vulnerabilities and making them less prone to security threats."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "What is a primary security benefit of using minimal base images in Docker?", "related_lectures": []}, {"_class": "assessment", "id": 73184396, "assessment_type": "multiple-choice", "prompt": {"question": "Docker content trust provides which security feature for images and repositories?", "answers": ["Image encryption", "Digital signatures", "Access control lists", "Network segmentation"], "explanation": "Docker Content Trust provides a security feature through digital signatures. It allows the signing and verification of images, ensuring the authenticity and integrity of images and their sources."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "Docker content trust provides which security feature for images and repositories?", "related_lectures": []}, {"_class": "assessment", "id": 73184398, "assessment_type": "multiple-choice", "prompt": {"question": "To improve container isolation, it&#x27;s recommended to run containers with their own network stack using the docker run --____ flag.", "answers": ["net", "isolate", "network", "standalone"], "explanation": "To improve container isolation, it&#x27;s recommended to run containers with their own network stack using the docker run --network flag. This allows each container to have its isolated network, enhancing security and avoiding interference with other containers."}, "correct_response": ["c"], "section": "Docker Networking", "question_plain": "To improve container isolation, it&#x27;s recommended to run containers with their own network stack using the docker run --____ flag.", "related_lectures": []}, {"_class": "assessment", "id": 73184400, "assessment_type": "multiple-choice", "prompt": {"question": "The docker ______ command is used to scan images for vulnerabilities.", "answers": ["check", "secure", "scan", "inspect"], "explanation": "The docker scan command is used to scan images for vulnerabilities. It provides insights into potential security risks in the container image, helping users identify and address issues before deploying the container."}, "correct_response": ["c"], "section": "Docker Security", "question_plain": "The docker ______ command is used to scan images for vulnerabilities.", "related_lectures": []}, {"_class": "assessment", "id": 73184402, "assessment_type": "multiple-choice", "prompt": {"question": "Docker Bench for Security is a script that checks for dozens of common best-practices around deploying Docker containers in ______.", "answers": ["production", "development", "testing", "staging"], "explanation": "Docker Bench for Security is a script that checks for dozens of common best practices around deploying Docker containers in production. It helps ensure that containers are deployed securely and follow best practices for production environments."}, "correct_response": ["a"], "section": "Docker Security Best Practices", "question_plain": "Docker Bench for Security is a script that checks for dozens of common best-practices around deploying Docker containers in ______.", "related_lectures": []}, {"_class": "assessment", "id": 73184404, "assessment_type": "multiple-choice", "prompt": {"question": "Using docker _______, you can set up fine-grained access control policies to dictate what a container can and cannot do.", "answers": ["permissions", "access control lists", "secrets", "swarm"], "explanation": "Docker Swarm provides the ability to set up fine-grained access control policies for containers. This includes defining permissions and access control lists to specify what each container can or cannot do within a Swarm cluster."}, "correct_response": ["b"], "section": "Docker Swarm", "question_plain": "Using docker _______, you can set up fine-grained access control policies to dictate what a container can and cannot do.", "related_lectures": []}, {"_class": "assessment", "id": 73184406, "assessment_type": "multiple-choice", "prompt": {"question": "For secure secret management, Docker has a feature called Docker ______, which allows secure transmission and storage of sensitive configuration data.", "answers": ["Secrets Manager", "Secret Hub", "Vault", "Secret Store"], "explanation": "Docker Secrets, a feature in Docker Swarm, enables secure transmission and storage of sensitive configuration data. It ensures that sensitive information, such as passwords or API keys, is securely managed within a Docker Swarm cluster."}, "correct_response": ["c"], "section": "Docker Security", "question_plain": "For secure secret management, Docker has a feature called Docker ______, which allows secure transmission and storage of sensitive configuration data.", "related_lectures": []}, {"_class": "assessment", "id": 73184408, "assessment_type": "multiple-choice", "prompt": {"question": "A company is facing regulatory compliance requirements that mandate a thorough analysis of any third-party software components for known vulnerabilities. What Docker feature would be most relevant to comply with these regulations?", "answers": ["Docker Bench for Security", "Docker Content Trust", "Docker Security Scanning", "Docker Secrets"], "explanation": "To comply with regulatory requirements for analyzing third-party software components, Docker Security Scanning can be used. It scans images for vulnerabilities and provides insights into potential security issues."}, "correct_response": ["c"], "section": "Docker Security", "question_plain": "A company is facing regulatory compliance requirements that mandate a thorough analysis of any third-party software components for known vulnerabilities. What Docker feature would be most relevant to comply with these regulations?", "related_lectures": []}, {"_class": "assessment", "id": 73184410, "assessment_type": "multiple-choice", "prompt": {"question": "An organization wants to ensure that only trusted images are deployed to their Docker environment. What Docker security mechanism would you suggest they implement?", "answers": ["Docker AppArmor Profiles", "Docker Image Signing", "Docker Content Trust", "Docker Secrets"], "explanation": "Docker Content Trust should be implemented to ensure only trusted images are deployed. It enables image signing and verification, ensuring the integrity and authenticity of the images before deployment."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "An organization wants to ensure that only trusted images are deployed to their Docker environment. What Docker security mechanism would you suggest they implement?", "related_lectures": []}, {"_class": "assessment", "id": 73184412, "assessment_type": "multiple-choice", "prompt": {"question": "A security engineer needs to audit a Docker host and its containers for potential security misconfigurations. Which Docker tool can be utilized to automate this process?", "answers": ["Docker Compose", "Docker Bench for Security", "Docker Swarm", "Docker Security Toolkit"], "explanation": "Docker Bench for Security is a tool designed for precisely this scenario. It automates the process of auditing Docker hosts and containers, checking for security best practices and potential misconfigurations."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "A security engineer needs to audit a Docker host and its containers for potential security misconfigurations. Which Docker tool can be utilized to automate this process?", "related_lectures": []}, {"_class": "assessment", "id": 73184446, "assessment_type": "multiple-choice", "prompt": {"question": "Docker Content Trust provides security by signing images. What does it use for signing?", "answers": ["RSA signatures", "SHA-256 hashes", "MD5 checksums", "AES encryption"], "explanation": "Docker Content Trust uses RSA signatures for signing images. This ensures the integrity and authenticity of the images by verifying their digital signatures before deployment."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "Docker Content Trust provides security by signing images. What does it use for signing?", "related_lectures": []}, {"_class": "assessment", "id": 73184416, "assessment_type": "multiple-choice", "prompt": {"question": "How do Docker secrets provide a more secure alternative to passing sensitive data via environment variables or hardcoding in Dockerfiles?", "answers": ["They encrypt the sensitive data in transit", "They store data in a centralized, encrypted vault", "They allow for the dynamic injection of secrets during runtime", "They automatically rotate sensitive data at regular intervals"], "explanation": "Docker secrets offer a more secure alternative by allowing for the dynamic injection of secrets during runtime. This avoids exposing sensitive information in Dockerfiles or environment variables, reducing the risk of unauthorized access."}, "correct_response": ["c"], "section": "Docker Security", "question_plain": "How do Docker secrets provide a more secure alternative to passing sensitive data via environment variables or hardcoding in Dockerfiles?", "related_lectures": []}, {"_class": "assessment", "id": 73184418, "assessment_type": "multiple-choice", "prompt": {"question": "What is the primary benefit of using user namespaces in Docker for security?", "answers": ["Isolate container processes from the host system", "Simplify container orchestration", "Improve container networking", "Enhance container storage"], "explanation": "The primary benefit of using user namespaces in Docker for security is to isolate container processes from the host system. This isolation helps prevent unauthorized access and potential security breaches by restricting the privileges of containerized processes."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "What is the primary benefit of using user namespaces in Docker for security?", "related_lectures": []}, {"_class": "assessment", "id": 73184420, "assessment_type": "multiple-choice", "prompt": {"question": "Docker secrets can be used in a swarm mode cluster. Which component of the Docker architecture is responsible for securely transmitting and storing these secrets?", "answers": ["Swarm Manager", "Docker Daemon", "Docker Compose", "Swarm Worker"], "explanation": "The Swarm Manager is responsible for securely transmitting and storing Docker secrets in a swarm mode cluster. It ensures that secrets are distributed only to the necessary services and containers within the swarm."}, "correct_response": ["a"], "section": "Docker Swarm", "question_plain": "Docker secrets can be used in a swarm mode cluster. Which component of the Docker architecture is responsible for securely transmitting and storing these secrets?", "related_lectures": []}, {"_class": "assessment", "id": 73184422, "assessment_type": "multiple-choice", "prompt": {"question": "When configuring user namespaces in Docker, what is the main effect of this feature on container processes?", "answers": ["Increased Isolation", "Reduced Security", "Enhanced Performance", "No Effect"], "explanation": "Configuring user namespaces in Docker leads to increased isolation for container processes. It provides an additional layer of security by mapping container user IDs to non-contiguous host user IDs, reducing the impact of security vulnerabilities."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "When configuring user namespaces in Docker, what is the main effect of this feature on container processes?", "related_lectures": []}, {"_class": "assessment", "id": 73184424, "assessment_type": "multiple-choice", "prompt": {"question": "What is required to implement Docker secrets in a non-swarm mode Docker environment?", "answers": ["Docker Volume", "Docker Overlay Network", "Docker Compose", "Encrypted Environment Variables"], "explanation": "To implement Docker secrets in a non-swarm mode Docker environment, Docker Overlay Network is required. It allows secure communication between containers and ensures that secrets are transmitted and stored in a protected manner."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "What is required to implement Docker secrets in a non-swarm mode Docker environment?", "related_lectures": []}, {"_class": "assessment", "id": 73184426, "assessment_type": "multiple-choice", "prompt": {"question": "To prevent unauthorized access to sensitive data, Docker secrets are stored in a _______ which is encrypted at rest.", "answers": ["Configuration File", "Key Vault", "Secret Store", "Credential Manager"], "explanation": "Docker secrets are stored in a &quot;Secret Store&quot; which is encrypted at rest, enhancing security by protecting sensitive information such as API keys and passwords."}, "correct_response": ["c"], "section": "Docker Security", "question_plain": "To prevent unauthorized access to sensitive data, Docker secrets are stored in a _______ which is encrypted at rest.", "related_lectures": []}, {"_class": "assessment", "id": 73184428, "assessment_type": "multiple-choice", "prompt": {"question": "Docker secrets are designed to be immutable; once created, they cannot be _______.", "answers": ["Modified", "Deleted", "Shared", "Encrypted"], "explanation": "Docker secrets are designed to be immutable, meaning once created, they cannot be modified. This ensures the integrity and security of sensitive information throughout the container&#x27;s lifecycle."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "Docker secrets are designed to be immutable; once created, they cannot be _______.", "related_lectures": []}, {"_class": "assessment", "id": 73184430, "assessment_type": "multiple-choice", "prompt": {"question": "User namespaces in Docker allow the container&#x27;s root user to have different _______ from the host&#x27;s root user.", "answers": ["UID (User ID)", "GID (Group ID)", "Permissions", "Home Directory"], "explanation": "User namespaces in Docker allow the container&#x27;s root user to have a different UID (User ID) from the host&#x27;s root user. This enhances security by isolating user privileges between the container and the host."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "User namespaces in Docker allow the container&#x27;s root user to have different _______ from the host&#x27;s root user.", "related_lectures": []}, {"_class": "assessment", "id": 73184432, "assessment_type": "multiple-choice", "prompt": {"question": "Docker secrets can be accessed by services within a swarm using a special file system mounted at /run/secrets/ inside the container, known as a _______.", "answers": ["secret volume", "secure enclave", "secret filesystem", "secure mount"], "explanation": "Docker secrets are accessed using a special file system mounted at /run/secrets/ inside the container, known as a secret filesystem. This provides a secure and isolated location for managing sensitive information within the swarm."}, "correct_response": ["c"], "section": "Docker Swarm, Security", "question_plain": "Docker secrets can be accessed by services within a swarm using a special file system mounted at /run/secrets/ inside the container, known as a _______.", "related_lectures": []}, {"_class": "assessment", "id": 73184434, "assessment_type": "multiple-choice", "prompt": {"question": "To enable user namespaces in Docker, the daemon must be started with the --userns-remap flag set to a specific _______ or default.", "answers": ["user namespace", "user ID", "remap ID", "usermap"], "explanation": "To enable user namespaces in Docker, the daemon must be started with the --userns-remap flag set to a specific user ID or default. This feature enhances security by mapping container user IDs to different user namespaces."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "To enable user namespaces in Docker, the daemon must be started with the --userns-remap flag set to a specific _______ or default.", "related_lectures": []}, {"_class": "assessment", "id": 73184436, "assessment_type": "multiple-choice", "prompt": {"question": "When user namespaces are enabled, Docker creates a new user namespace for each _______ to isolate it from the host system.", "answers": ["container", "service", "image", "task"], "explanation": "When user namespaces are enabled, Docker creates a new user namespace for each task to isolate it from the host system. This ensures that processes within the container have their own user namespace, enhancing security and isolation."}, "correct_response": ["d"], "section": "Docker Security", "question_plain": "When user namespaces are enabled, Docker creates a new user namespace for each _______ to isolate it from the host system.", "related_lectures": []}, {"_class": "assessment", "id": 73184438, "assessment_type": "multiple-choice", "prompt": {"question": "A company needs to deploy a Docker application that handles credit card processing. How should Docker secrets be used to manage API keys required for processing payments?", "answers": ["Use environment variables", "Store secrets in plain text files", "Utilize Docker Configs", "Embed secrets directly into the Docker image"], "explanation": "Docker secrets should be managed using Docker Configs. This ensures secure storage and distribution of sensitive information, such as API keys, by preventing exposure in plain text or embedded in the image."}, "correct_response": ["c"], "section": "Docker Security", "question_plain": "A company needs to deploy a Docker application that handles credit card processing. How should Docker secrets be used to manage API keys required for processing payments?", "related_lectures": []}, {"_class": "assessment", "id": 73184440, "assessment_type": "multiple-choice", "prompt": {"question": "An organization is concerned about the potential for privileged escalation attacks from within a container. How would the implementation of user namespaces help in this scenario?", "answers": ["Isolate processes within the container", "Limit user access to the host system", "Implement role-based access control", "Encrypt the container filesystem"], "explanation": "User namespaces in Docker can help mitigate privileged escalation attacks by limiting user access to the host system. This ensures that even if a user gains escalated privileges within the container, it doesn&#x27;t translate to elevated access on the host."}, "correct_response": ["b"], "section": "Docker Security", "question_plain": "An organization is concerned about the potential for privileged escalation attacks from within a container. How would the implementation of user namespaces help in this scenario?", "related_lectures": []}, {"_class": "assessment", "id": 73184442, "assessment_type": "multiple-choice", "prompt": {"question": "During an audit, it was found that environment variables were used to pass sensitive information to Docker containers. What changes should be implemented to secure this process using Docker features?", "answers": ["Continue using environment variables", "Encrypt environment variables", "Switch to Docker Configs", "Utilize Docker Secrets"], "explanation": "To secure sensitive information in Docker, switch to using Docker Secrets instead of environment variables. Docker Secrets provide a more secure way to manage and pass sensitive data to containers, ensuring better protection against unauthorized access."}, "correct_response": ["d"], "section": "Docker Security", "question_plain": "During an audit, it was found that environment variables were used to pass sensitive information to Docker containers. What changes should be implemented to secure this process using Docker features?", "related_lectures": []}, {"_class": "assessment", "id": 73184444, "assessment_type": "multiple-choice", "prompt": {"question": "What is a recommended practice for securing the Docker daemon?", "answers": ["Restrict network access to the Docker daemon", "Disable container logging", "Allow all incoming traffic", "Use the default Docker daemon configuration"], "explanation": "A recommended practice for securing the Docker daemon is to restrict network access. This helps prevent unauthorized access and potential security breaches by controlling the connections made to the Docker daemon."}, "correct_response": ["a"], "section": "Docker Security", "question_plain": "What is a recommended practice for securing the Docker daemon?", "related_lectures": []}]};
+    var correct = 0;
+    var total = 0;
+    const questionData = quizData.questions
+    const passPercent = quizData.pass_percent
+    function kiemTraDapAn(correctMuti, choise) {
+      // Chuyển đổi các số trong choise thành chữ cái tương ứng
+      const choiseLetters = choise.map(num => String.fromCharCode(parseInt(num) + 'a'.charCodeAt(0)));
+      console.log('choiseLetters',choiseLetters)
+      // Kiểm tra điều kiện:
+      // 1. Chiều dài hai mảng phải bằng nhau
+      // 2. Tất cả các phần tử trong choiseLetters phải có trong correctMuti
+      if (
+        choiseLetters.length === correctMuti.length &&
+        choiseLetters.every(c => correctMuti.includes(c))
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    function main() {
+      total = questionData.length;
+
+      var questions = [];
+      for (var i = 0; i < questionData.length; i++) {
+        var question = questionData[i];
+        var questionText = question.prompt.question;
+        var answers = question.prompt.answers;
+        var correctAnswer = question.correct_response[0];
+        var correctMuti = question.correct_response;
+        var correctAnswerText = answers[correctAnswer.charCodeAt(0) - 97];
+        var questionObj = {
+          question: questionText,
+          correctAnswer: correctAnswerText,
+          answers: answers,
+          id: question.id,
+          explanation: question.prompt.explanation,
+          correctMuti
+
+        };
+        questions.push(questionObj);
+      }
+      console.log(questions.filter(i => i.correctMuti.length > 1))
+
+      updateScore();
+
+      // display the questions
+      var questionsContainer = document.getElementById("quiz-container");
+      for (var i = 0; i < questions.length; i++) {
+        var question = questions[i];
+        var questionElement = document.createElement("form");
+        questionElement.className = "question";
+        questionElement.innerHTML =
+          "<span>Question " +
+          (i + 1) +
+          ":</span>" +
+          '<div class="question-prompt">' +
+          question.question +
+          "</div>";
+        questionElement.id = question.id;
+        questionElement.classList.add("quiz-container");
+        var answersElement = document.createElement("ul");
+        answersElement.className = "answers";
+        console.log('question.correctMuti', question.correctMuti.length)
+        if (question.correctMuti.length > 1) {
+          for (var j = 0; j < question.answers.length; j++) {
+            var answer = question.answers[j];
+            var answerElement = document.createElement("li");
+            answerElement.className = "answer";
+            answerElement.innerHTML =
+              '<label for="input-' +
+              question.id +
+              "-" +
+              j +
+              '"><div onclick="select2(' +
+              question.id +
+              ", " +
+              j +
+              ')"><input id="input-' +
+              question.id +
+              "-" +
+              j +
+              '" type="checkbox" name="question' +
+              i +
+              '" value="' +
+              j +
+              '">' +
+              answer +
+              "</input></div></label>";
+            answerElement.classList.add("question-answer");
+            answersElement.appendChild(answerElement);
+          }
+        } else {
+          for (var j = 0; j < question.answers.length; j++) {
+            var answer = question.answers[j];
+            var answerElement = document.createElement("li");
+            answerElement.className = "answer";
+            answerElement.innerHTML =
+              '<label for="input-' +
+              question.id +
+              "-" +
+              j +
+              '"><div onclick="select(' +
+              question.id +
+              ", " +
+              j +
+              ')"><span></span><input id="input-' +
+              question.id +
+              "-" +
+              j +
+              '" type="radio" name="question' +
+              i +
+              '" value="' +
+              j +
+              '">' +
+              answer +
+              "</input></div></label>";
+            answerElement.classList.add("question-answer");
+            answersElement.appendChild(answerElement);
+          }
+        }
+        questionElement.appendChild(answersElement);
+
+        // add a submit button
+        var submitButton = document.createElement("button");
+        submitButton.className = "submit";
+        submitButton.innerHTML = "Submit";
+        submitButton.classList.add("submit-button");
+
+        submitButton.addEventListener("click", function (e) {
+          e.preventDefault();
+          var questionElement = e.target.parentElement;
+          var questionId = questionElement.id;
+          var question = questions.filter(function (q) {
+            return q.id == questionId;
+          })[0];
+
+          // set the border color of all answers to black
+          var answers = questionElement.getElementsByClassName("answer");
+          for (var i = 0; i < answers.length; i++) {
+            console.log(answers[i]);
+            answers[i].children[0].style.borderColor = "#1c1d1f";
+          }
+
+          var answer = questionElement.querySelector(
+            'input[type="radio"]:checked'
+          );
+          var mutilanswer = questionElement.querySelectorAll(
+            'input[type="checkbox"]:checked'
+          );
+          if (answer) {
+            var answerIndex = answer.value;
+            var answerText = question.answers[answerIndex];
+            if (answerText == question.correctAnswer) {
+              answer.parentElement.parentElement.style.borderColor =
+                "limegreen";
+              // alert("Correct!");
+              correct++;
+              updateScore();
+              questionElement.innerHTML += question.explanation
+
+            } else {
+              answer.parentElement.parentElement.style.borderColor = "red";
+              // alert("Incorrect!");
+            }
+          }
+          if (mutilanswer) {
+            var answerIndex = [...mutilanswer].map(a => a.value);
+
+            if (kiemTraDapAn(question.correctMuti, answerIndex)) {
+              [...mutilanswer].map(item => {
+                item.parentElement.parentElement.style.borderColor =
+                "limegreen";
+              })
+              // alert("Correct!");
+              correct++;
+              updateScore();
+              questionElement.innerHTML += question.explanation
+            } else {
+              [...mutilanswer].map(item => {
+                item.parentElement.parentElement.style.borderColor =
+                "red";
+              })
+            }
+            // var answerText = question.answers[answerIndex];
+            // if (answerText == question.correctAnswer) {
+            //   answer.parentElement.parentElement.style.borderColor =
+            //     "limegreen";
+            //   // alert("Correct!");
+            //   correct++;
+            //   updateScore();
+            //   questionElement.innerHTML += question.explanation
+
+            // } else {
+            //   answer.parentElement.parentElement.style.borderColor = "red";
+            //   // alert("Incorrect!");
+            // }
+          }
+          // else {
+          //   alert("Please select an answer.");
+          // }
+
+        });
+
+        // add button
+        questionElement.appendChild(submitButton);
+
+        questionsContainer.appendChild(questionElement);
+      }
+    }
+
+    function select(question, answer) {
+      var questionElement = document.getElementById(question);
+      var answers = questionElement.getElementsByClassName("answer");
+      for (var i = 0; i < answers.length; i++) {
+        var span = answers[i].children[0].children[0].children[0];
+        var input = answers[i].children[0].children[0].children[1];
+        span.classList.remove("selected");
+        input.checked = false;
+      }
+      var span = answers[answer].children[0].children[0].children[0];
+      var input = answers[answer].children[0].children[0].children[1];
+      span.classList.add("selected");
+      input.checked = true;
+    }
+    function select2(question, answer) {
+      var questionElement = document.getElementById(question);
+      var answers = questionElement.getElementsByClassName("answer");
+      // for (var i = 0; i < answers.length; i++) {
+      //   var span = answers[i].children[0].children[0].children[0];
+      //   var input = answers[i].children[0].children[0].children[1];
+      //   if(input.checked){
+      //     span.classList.remove("selected");
+      //     input.checked = false;
+      //   }
+
+      // }
+      // var span = answers[answer].children[0].children[0].children[0];
+      // var input = answers[answer].children[0].children[0].children[1];
+      // span.classList.add("selected");
+      // input.checked = true;
+    }
+    function updateScore() {
+      var scoreElem = document.getElementById("score");
+      const score = (correct / total) * 100;
+      scoreElem.innerHTML = "Score: " + score + "/" + passPercent + "%";
+    }
+  </script>
+</body>
+
+</html>
